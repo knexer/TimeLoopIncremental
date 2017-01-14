@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GridInput : MonoBehaviour {
-    public Resource? ProvidedResource = null;
+    public ResourceType? ProvidedResource = null;
     public int X;
     public int Y;
     public Grid Grid;
