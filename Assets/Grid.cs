@@ -26,7 +26,7 @@ public class Grid : MonoBehaviour {
 
     private GameObject InstantiateCell(int w, int h)
     {
-        GameObject cell = Instantiate(CellPrefab, transform);
+        GameObject cell = Instantiate(CellPrefab, transform, false);
 
         cell.name += " (" + w + ", " + h + ")";
         cell.transform.position = gridToWorldSpace(w, h);
@@ -36,15 +36,15 @@ public class Grid : MonoBehaviour {
 
     private Vector2 gridToWorldSpace(int w, int h)
     {
-        Vector2 cellSizeWorldSpace = CellPrefab.GetComponent<SpriteRenderer>().sprite.bounds.size;
-        Vector2 gridSizeWorldSpace = new Vector2(cellSizeWorldSpace.x, cellSizeWorldSpace.y);
-        gridSizeWorldSpace.Scale(new Vector2(Width, Height));
-        Vector2 topLeft = ((Vector2)transform.position) - (gridSizeWorldSpace / 2);
-        Vector2 cellOffsetWorldSpace = new Vector2(cellSizeWorldSpace.x, cellSizeWorldSpace.y);
-        cellOffsetWorldSpace.Scale(new Vector2(w, h));
-        cellOffsetWorldSpace += topLeft;
-        cellOffsetWorldSpace += cellSizeWorldSpace / 2;
+        Vector2 cellSizeLocalSpace = CellPrefab.GetComponent<SpriteRenderer>().sprite.bounds.size;
+        Vector2 gridSizeLocalSpace = new Vector2(cellSizeLocalSpace.x, cellSizeLocalSpace.y);
+        gridSizeLocalSpace.Scale(new Vector2(Width, Height));
+        Vector2 topLeft = gridSizeLocalSpace / -2;
+        Vector2 cellOffsetLocalSpace = new Vector2(cellSizeLocalSpace.x, cellSizeLocalSpace.y);
+        cellOffsetLocalSpace.Scale(new Vector2(w, h));
+        cellOffsetLocalSpace += topLeft;
+        cellOffsetLocalSpace += cellSizeLocalSpace / 2;
 
-        return cellOffsetWorldSpace;
+        return transform.TransformVector(cellOffsetLocalSpace) + transform.position;
     }
 }
