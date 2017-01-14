@@ -9,11 +9,14 @@ public class Grid : MonoBehaviour {
     public int Width = 1;
     public int Height = 1;
     public GameObject CellPrefab;
+    public int NumInputs = 1;
+    public GridInput InputPrefab;
 
     private GameObject[,] GridCells;
 
 	// Use this for initialization
 	void Start () {
+        // Populate the grid
         GridCells = new GameObject[Width, Height];
         for (int w = 0; w < Width; w++)
         {
@@ -21,6 +24,19 @@ public class Grid : MonoBehaviour {
             {
                 GridCells[w, h] = InstantiateCell(w, h);
             }
+        }
+        
+        // Create the inputs
+        for (int i = 0; i < NumInputs; i++)
+        {
+            float cellFractionToTheLeft = ((float) i + 1) / (NumInputs + 1);
+            int cellsToTheLeft = Mathf.FloorToInt(cellFractionToTheLeft * Width);
+
+            GridInput currentInput = Instantiate(InputPrefab, transform, false);
+
+            currentInput.Grid = this;
+            currentInput.X = cellsToTheLeft;
+            currentInput.Y = 0;
         }
 	}
 
@@ -34,7 +50,7 @@ public class Grid : MonoBehaviour {
         return cell;
     }
 
-    private Vector2 gridToWorldSpace(int w, int h)
+    public Vector2 gridToWorldSpace(int w, int h)
     {
         Vector2 cellSizeLocalSpace = CellPrefab.GetComponent<SpriteRenderer>().sprite.bounds.size;
         Vector2 gridSizeLocalSpace = new Vector2(cellSizeLocalSpace.x, cellSizeLocalSpace.y);
