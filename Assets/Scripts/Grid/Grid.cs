@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(ConveyorSolver))]
 public class Grid : MonoBehaviour {
 
     //Unity configurables
@@ -16,7 +17,7 @@ public class Grid : MonoBehaviour {
     private GridPositionComponent[,] GridObjects;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
         // Populate the grid
         GridCells = new GameObject[Width, Height];
         for (int w = 0; w < Width; w++)
@@ -36,6 +37,8 @@ public class Grid : MonoBehaviour {
             int cellsToTheLeft = Mathf.FloorToInt(cellFractionToTheLeft * Width);
 
             GridInput currentInput = Instantiate(InputPrefab, transform, false);
+
+            currentInput.ProvidedResource = ResourceType.IRON;
 
             GridPositionComponent positionHolder = currentInput.GetComponent<GridPositionComponent>();
             positionHolder.XInitial = cellsToTheLeft;

@@ -4,6 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(GridPositionComponent))]
 public class GridInput : MonoBehaviour {
+    public Resource ResourcePrefab;
     public ResourceType? ProvidedResource = null;
     public float ProvidedPerSecond;
 
@@ -18,14 +19,31 @@ public class GridInput : MonoBehaviour {
 	void Update () {
         if (ProvidedResource != null)
         {
-            ResourceType providedResource = ProvidedResource.Value;
-            
             // Create resource(s) and insert them into the grid at the correct location.
-            ResourceSink itemDestination = PositionHolder.Grid.GetGridObjectAt(PositionHolder.Position).GetComponent<ResourceSink>();
-            if (itemDestination.CanAcceptItem)
+            GridPositionComponent machineAtLocation = PositionHolder.Grid.GetGridObjectAt(PositionHolder.Position);
+            if (machineAtLocation != null)
             {
-                itemDestination.OfferItem(new Resource() { ResourceType = providedResource });
+                ResourceSink itemDestination = machineAtLocation.GetComponent<ResourceSink>();
+                if (itemDestination != null && itemDestination.CanAcceptItem)
+                {
+                    SpawnItemAt(itemDestination);
+                }
             }
+        }
+    }
+
+    private void SpawnItemAt(ResourceSink itemDestination)
+    {
+        ResourceType providedResource = ProvidedResource.Value;
+
+        Resource input = Instantiate(ResourcePrefab);
+
+        input.ResourceType = providedResource;
+        input.transform.position = itemDestination.GetComponent<GridPositionComponent>().Grid.gridToWorldSpace(itemDestination.GetComponent<GridPositionComponent>().Position);
+
+        if (!itemDestination.OfferItem(input))
+        {
+            Destroy(input);
         }
     }
 }

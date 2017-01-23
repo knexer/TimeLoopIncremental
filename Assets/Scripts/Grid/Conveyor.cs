@@ -5,7 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(GridPositionComponent))]
 [RequireComponent(typeof(ResourceSink))]
 public class Conveyor : MonoBehaviour {
-    public Grid Grid;
     public Direction Orientation;
     public GridPosition ExitLocation
     {
@@ -21,22 +20,26 @@ public class Conveyor : MonoBehaviour {
     private ResourceSink ItemSource;
 
     private float LastConveyanceTime;
+    private Vector2 initialPosition;
     public bool ReadyToOffer;
     public Resource CurrentlyConveyedItem;
 
     // Use this for initialization
     void Start()
     {
-        Solver = Grid.gameObject.transform.parent.gameObject.GetComponent<ConveyorSolver>();
+        Solver = GetComponentInParent<ConveyorSolver>();
         // This guy will handle deciding if we're blocked or not, and giving us input, at Update time
         Solver.RegisterConveyor(this);
 
         PositionHolder = GetComponent<GridPositionComponent>();
+        PositionHolder.Grid.SetGridObjectAt(PositionHolder.Position, PositionHolder);
 
         ItemSource = GetComponent<ResourceSink>();
         ItemSource.DeliverItem = (item) =>
         {
             CurrentlyConveyedItem = item;
+            LastConveyanceTime = Time.time;
+            initialPosition = item.transform.position;
             return false;
         };
 
@@ -45,22 +48,20 @@ public class Conveyor : MonoBehaviour {
 
     void LateUpdate ()
     {
-        /// CurrentyConveyedItem is updated for us at Update time
-        if (CurrentlyConveyedItem == null)
+        if (CurrentlyConveyedItem != null)
         {
-            //check if any items are available for conveyance, and pick one up if so
-            LastConveyanceTime = Time.time;
-        }
-        else
-        {
-            //lerp from initial to final
-            CurrentlyConveyedItem.transform.position = Vector2.Lerp(CurrentlyConveyedItem.transform.position, getExitPosition(), Time.deltaTime / (LastConveyanceTime + ConveyingTimeSeconds - Time.time));
-            if (LastConveyanceTime + ConveyingTimeSeconds >= Time.time)
+            if (!ReadyToOffer)
             {
-                //complete conveying the item
-                ReadyToOffer = true;
+                Debug.Log("Lerp factor: " + (Time.time - LastConveyanceTime) / ConveyingTimeSeconds);
+                //lerp from initial to final
+                CurrentlyConveyedItem.transform.position = Vector2.Lerp(initialPosition, getExitPosition(), (Time.time - LastConveyanceTime) / ConveyingTimeSeconds);
+                if (LastConveyanceTime + ConveyingTimeSeconds <= Time.time)
+                {
+                    //complete conveying the item
+                    ReadyToOffer = true;
 
-                LastConveyanceTime += ConveyingTimeSeconds;
+                    LastConveyanceTime += ConveyingTimeSeconds;
+                }
             }
         }
     }
@@ -68,7 +69,14 @@ public class Conveyor : MonoBehaviour {
     /// <returns>True iff this conveyor is pointing at a ResourceSink that can currently accept an item.</returns>
     public bool CanDeliverItem()
     {
-        return GetComponent<GridPositionComponent>().Grid.GetGridObjectAt(ExitLocation).GetComponent<ResourceSink>().CanAcceptItem;
+        GridPositionComponent targetMachine = GetComponent<GridPositionComponent>().Grid.GetGridObjectAt(ExitLocation);
+        if (targetMachine == null
+            || targetMachine.GetComponent<ResourceSink>() == null)
+        {
+            return false;
+        }
+
+        return targetMachine.GetComponent<ResourceSink>().CanAcceptItem;
     }
 
     /// <summary>
@@ -81,6 +89,7 @@ public class Conveyor : MonoBehaviour {
         {
             CurrentlyConveyedItem = null;
             ReadyToOffer = false;
+            ItemSource.CanAcceptItem = true;
             return true;
         }
 
@@ -90,6 +99,6 @@ public class Conveyor : MonoBehaviour {
     private Vector2 getExitPosition()
     {
         // this isn't right, should depend on scale somehow
-        return ((Vector2)Grid.gridToWorldSpace(PositionHolder.Position) + Grid.gridToWorldSpace(ExitLocation)) / 2;
+        return ((Vector2)PositionHolder.Grid.gridToWorldSpace(PositionHolder.Position) + PositionHolder.Grid.gridToWorldSpace(ExitLocation)) / 2;
     }
 }
