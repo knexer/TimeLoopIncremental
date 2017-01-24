@@ -52,11 +52,26 @@ public class Conveyor : MonoBehaviour {
         {
             if (!ReadyToOffer)
             {
-                Debug.Log("Lerp factor: " + (Time.time - LastConveyanceTime) / ConveyingTimeSeconds);
-                //lerp from initial to final
-                CurrentlyConveyedItem.transform.position = Vector2.Lerp(initialPosition, getExitPosition(), (Time.time - LastConveyanceTime) / ConveyingTimeSeconds);
-                if (LastConveyanceTime + ConveyingTimeSeconds <= Time.time)
+                //do two-phase movement; from entry point to center to exit point
+                float conveyanceProportion = (Time.time - LastConveyanceTime) / ConveyingTimeSeconds;
+
+                if (conveyanceProportion < 0.5f)
                 {
+                    //phase 1; range 0-0.5
+                    //double that to 0-1
+                    CurrentlyConveyedItem.transform.position = Vector2.Lerp(initialPosition, transform.position, 2 * conveyanceProportion);
+                }
+                else if (conveyanceProportion < 1.0f)
+                {
+                    //phase 2; range 0.5-1
+                    //double that to 1-2 and shift down by 1 to 0-1
+                    CurrentlyConveyedItem.transform.position = Vector2.Lerp(transform.position, getExitPosition(), conveyanceProportion * 2 - 1);
+                }
+                else
+                {
+                    //complete movement
+                    CurrentlyConveyedItem.transform.position = getExitPosition();
+
                     //complete conveying the item
                     ReadyToOffer = true;
 
