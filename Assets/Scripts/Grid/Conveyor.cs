@@ -1,11 +1,34 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(GridPositionComponent))]
 [RequireComponent(typeof(ResourceSink))]
 public class Conveyor : MonoBehaviour {
-    public Direction Orientation;
+    private Direction InternalOrientation;
+    public Direction InitialOrientation;
+    public Direction Orientation
+    {
+        get { return InternalOrientation; }
+        set
+        {
+            InternalOrientation = value;
+            switch (InternalOrientation)
+            {
+                case Direction.DOWN:
+                case Direction.UP:
+                    GetComponent<SpriteRenderer>().sprite = VerticalSprite;
+                    break;
+                case Direction.LEFT:
+                case Direction.RIGHT:
+                    GetComponent<SpriteRenderer>().sprite = HorizontalSprite;
+                    break;
+                default:
+                    throw new ArgumentException(InternalOrientation + " is not a recognized Direction.");
+            }
+        }
+    }
     public GridPosition ExitLocation
     {
         get
@@ -14,6 +37,8 @@ public class Conveyor : MonoBehaviour {
         }
     }
     public float ConveyingTimeSeconds = 0.5f;
+    public Sprite VerticalSprite;
+    public Sprite HorizontalSprite;
 
     private ConveyorSolver Solver;
     private GridPositionComponent PositionHolder;
@@ -21,7 +46,10 @@ public class Conveyor : MonoBehaviour {
 
     private float LastConveyanceTime;
     private Vector2 initialPosition;
+
+    [HideInInspector]
     public bool ReadyToOffer;
+    [HideInInspector]
     public Resource CurrentlyConveyedItem;
 
     // Use this for initialization
@@ -44,6 +72,8 @@ public class Conveyor : MonoBehaviour {
         };
 
         ReadyToOffer = false;
+
+        Orientation = InitialOrientation;
 	}
 
     void LateUpdate ()
