@@ -10,6 +10,8 @@ public class Grid : MonoBehaviour {
     public int Width = 1;
     public int Height = 1;
     public GameObject CellPrefab;
+    public float CellWidth = 1.0f;
+    public float CellHeight = 1.0f;
     public int NumInputs = 1;
     public GridInput InputPrefab;
 
@@ -45,6 +47,16 @@ public class Grid : MonoBehaviour {
             positionHolder.YInitial = 0;
         }
 	}
+
+    void Start ()
+    {
+        //Resize the cells
+        foreach (GameObject cell in GridCells)
+        {
+            Vector2 cellSize = cell.GetComponent<SpriteRenderer>().sprite.bounds.size;
+            cell.transform.localScale = new Vector2(CellWidth / cellSize.x, CellHeight / cellSize.y);
+        }
+    }
 
     private GameObject InstantiateCell(GridPosition pos)
     {
@@ -90,14 +102,13 @@ public class Grid : MonoBehaviour {
     /// <returns>A Vector2 describing the corresponding point in Unity world space.</returns>
     public Vector2 gridToWorldSpace(GridPosition pos)
     {
-        Vector2 cellSizeLocalSpace = CellPrefab.GetComponent<SpriteRenderer>().sprite.bounds.size;
-        Vector2 gridSizeLocalSpace = new Vector2(cellSizeLocalSpace.x, cellSizeLocalSpace.y);
+        Vector2 gridSizeLocalSpace = new Vector2(CellWidth, CellHeight);
         gridSizeLocalSpace.Scale(new Vector2(Width, Height));
         Vector2 topLeft = gridSizeLocalSpace / -2;
-        Vector2 cellOffsetLocalSpace = new Vector2(cellSizeLocalSpace.x, cellSizeLocalSpace.y);
+        Vector2 cellOffsetLocalSpace = new Vector2(CellWidth, CellHeight);
         cellOffsetLocalSpace.Scale(pos.ToVector());
         cellOffsetLocalSpace += topLeft;
-        cellOffsetLocalSpace += cellSizeLocalSpace / 2;
+        cellOffsetLocalSpace += new Vector2(CellWidth, CellHeight) / 2;
 
         return transform.TransformVector(cellOffsetLocalSpace) + transform.position;
     }
