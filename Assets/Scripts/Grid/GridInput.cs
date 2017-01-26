@@ -38,12 +38,17 @@ public class GridInput : MonoBehaviour {
 
         Resource input = Instantiate(ResourcePrefab);
 
-        input.ResourceType = providedResource;
+        input.ResourceType = RandomResource();
         input.transform.position = itemDestination.GetComponent<GridPositionComponent>().Grid.gridToWorldSpace(itemDestination.GetComponent<GridPositionComponent>().Position);
 
         if (!itemDestination.OfferItem(input))
         {
             Destroy(input);
         }
+    }
+
+    private ResourceType RandomResource()
+    {
+        return (ResourceType) Random.Range(0, 3);
     }
 }
