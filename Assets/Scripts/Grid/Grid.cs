@@ -54,7 +54,6 @@ public class Grid : MonoBehaviour {
         foreach (GameObject cell in GridCells)
         {
             Vector2 cellSize = cell.GetComponent<SpriteRenderer>().sprite.bounds.size;
-            cell.transform.localScale = new Vector2(CellWidth / cellSize.x, CellHeight / cellSize.y);
         }
     }
 
@@ -63,7 +62,6 @@ public class Grid : MonoBehaviour {
         GameObject cell = Instantiate(CellPrefab, transform, false);
 
         cell.name += " " + pos.ToString();
-        cell.transform.position = gridToWorldSpace(pos);
 
         return cell;
     }
@@ -125,7 +123,7 @@ public class Grid : MonoBehaviour {
 
         machinePrefab.SetActive(false);
 
-        GameObject machine = Instantiate(machinePrefab, transform);
+        GameObject machine = Instantiate(machinePrefab, transform, false);
         machine.GetComponent<GridPositionComponent>().InitialPosition = pos;
 
         beforeAwake(machine);
