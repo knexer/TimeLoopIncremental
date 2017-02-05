@@ -60,7 +60,6 @@ public class Conveyor : MonoBehaviour {
         Solver.RegisterConveyor(this);
 
         PositionHolder = GetComponent<GridPositionComponent>();
-        PositionHolder.Grid.SetGridObjectAt(PositionHolder.Position, PositionHolder);
 
         ItemSource = GetComponent<ResourceSink>();
         ItemSource.DeliverItem = (item) =>

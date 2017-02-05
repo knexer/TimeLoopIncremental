@@ -43,8 +43,7 @@ public class Grid : MonoBehaviour {
             currentInput.ProvidedResource = ResourceType.IRON;
 
             GridPositionComponent positionHolder = currentInput.GetComponent<GridPositionComponent>();
-            positionHolder.XInitial = cellsToTheLeft;
-            positionHolder.YInitial = 0;
+            positionHolder.InitialPosition = new GridPosition(cellsToTheLeft, 0);
         }
 	}
 
@@ -70,6 +69,7 @@ public class Grid : MonoBehaviour {
 
     public bool IsInGrid(GridPosition pos)
     {
+        if (pos == null) return false;
         return pos.X >= 0 && pos.X < Width
             && pos.Y >= 0 && pos.Y < Height;
     }

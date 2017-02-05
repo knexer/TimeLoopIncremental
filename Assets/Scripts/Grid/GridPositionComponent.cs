@@ -6,8 +6,7 @@ using UnityEngine;
 /// Attach to GameObjects that exist in a simulation Grid.
 /// </summary>
 public class GridPositionComponent : MonoBehaviour {
-    public int XInitial;
-    public int YInitial;
+    public GridPosition InitialPosition;
 
     public Grid Grid;
     public GridPosition Position
@@ -18,17 +17,25 @@ public class GridPositionComponent : MonoBehaviour {
         }
         set
         {
-            
+            Grid.SetGridObjectAt(PositionImpl, null);
             PositionImpl = value;
             transform.position = Grid.gridToWorldSpace(PositionImpl);
+            Grid.SetGridObjectAt(PositionImpl, this);
         }
     }
 
     private GridPosition PositionImpl;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
+        // Establish relationship with the containing Grid.
+        // This object should be fully initialized (parent transform and initial position) before it's enabled for the first time.
         Grid = gameObject.transform.GetComponentInParent<Grid>();
-        Position = new GridPosition(XInitial, YInitial);
-	}
+        PositionImpl = InitialPosition;
+    }
+
+    void Start ()
+    {
+        Position = InitialPosition;
+    }
 }

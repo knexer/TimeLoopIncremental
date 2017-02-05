@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
+[Serializable]
 public class GridPosition
 {
-    public readonly int X;
-    public readonly int Y;
+    public int X;
+    public int Y;
 
     public GridPosition(int x, int y)
     {

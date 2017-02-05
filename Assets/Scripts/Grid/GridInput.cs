@@ -36,7 +36,7 @@ public class GridInput : MonoBehaviour {
     {
         ResourceType providedResource = ProvidedResource.Value;
 
-        Resource input = Instantiate(ResourcePrefab);
+        Resource input = Instantiate(ResourcePrefab, PositionHolder.Grid.transform);
 
         input.ResourceType = RandomResource();
         input.transform.position = itemDestination.GetComponent<GridPositionComponent>().Grid.gridToWorldSpace(itemDestination.GetComponent<GridPositionComponent>().Position);
