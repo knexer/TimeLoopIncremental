@@ -27,6 +27,7 @@ public class Grid : MonoBehaviour {
             for (int h = 0; h < Height; h++)
             {
                 GridCells[w, h] = InstantiateCell(new GridPosition(w, h));
+                GridCells[w, h].GetComponent<HotkeyListener>().SpawnPosition = new GridPosition(w, h);
             }
         }
 
@@ -93,6 +94,46 @@ public class Grid : MonoBehaviour {
         GridObjects[pos.X, pos.Y] = to;
 
         return previous;
+    }
+
+    /// <summary>
+    /// Spawns an instance of machinePrefab at pos iff there's not already a machine at pos.
+    /// </summary>
+    /// <param name="machinePrefab">The prefab to spawn an instance of.</param>
+    /// <param name="pos">The position to place the instance at.</param>
+    /// <returns>The spawned machine, or null if pos was already occupied or was not contained in the grid.</returns>
+    public GameObject TrySpawnMachineAt(GameObject machinePrefab, GridPosition pos, Action<GameObject> beforeAwake = null)
+    {
+        if (!IsInGrid(pos)) return null;
+
+        if (GetGridObjectAt(pos) != null) return null;
+
+        return ForceSpawnMachineAt(machinePrefab, pos, beforeAwake);
+    }
+
+    /// <summary>
+    /// Spawns an instance of machinePrefab at pos, replacing whatver machine was already at pos.
+    /// </summary>
+    /// <param name="machinePrefab">The prefab to spawn an instance of.</param>
+    /// <param name="pos">The position to place the instance at.</param>
+    /// <returns>The spawned machine, or null if pos was not contained in the grid.</returns>
+    public GameObject ForceSpawnMachineAt(GameObject machinePrefab, GridPosition pos, Action<GameObject> beforeAwake = null)
+    {
+        if (!IsInGrid(pos)) return null;
+
+        bool wasActive = machinePrefab.activeSelf;
+
+        machinePrefab.SetActive(false);
+
+        GameObject machine = Instantiate(machinePrefab, transform);
+        machine.GetComponent<GridPositionComponent>().InitialPosition = pos;
+
+        beforeAwake(machine);
+
+        machine.SetActive(wasActive);
+        machinePrefab.SetActive(wasActive);
+
+        return machine;
     }
 
     /// <summary>

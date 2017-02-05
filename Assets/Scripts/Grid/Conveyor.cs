@@ -53,11 +53,9 @@ public class Conveyor : MonoBehaviour {
     public Resource CurrentlyConveyedItem;
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         Solver = GetComponentInParent<ConveyorSolver>();
-        // This guy will handle deciding if we're blocked or not, and giving us input, at Update time
-        Solver.RegisterConveyor(this);
 
         PositionHolder = GetComponent<GridPositionComponent>();
 
@@ -74,6 +72,12 @@ public class Conveyor : MonoBehaviour {
 
         Orientation = InitialOrientation;
 	}
+
+    void Start()
+    {
+        // This guy will handle deciding if we're blocked or not, and giving us input, at Update time
+        Solver.RegisterConveyor(this);
+    }
 
     void LateUpdate ()
     {
