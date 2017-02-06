@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(ConveyorSolver))]
 public class Grid : MonoBehaviour {
@@ -10,8 +11,8 @@ public class Grid : MonoBehaviour {
     public int Width = 1;
     public int Height = 1;
     public GameObject CellPrefab;
-    public float CellWidth = 1.0f;
-    public float CellHeight = 1.0f;
+    private float CellWidth = 1;
+    private float CellHeight = 1;
     public int NumInputs = 1;
     public GridInput InputPrefab;
 
@@ -20,6 +21,10 @@ public class Grid : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
+        // scale the grid to correspond to the size indicated in the UI layout configuration
+        LayoutElement size = GetComponent<LayoutElement>();
+        transform.localScale = new Vector2(size.preferredWidth / Width, size.preferredHeight / Height);
+
         // Populate the grid
         GridCells = new GameObject[Width, Height];
         for (int w = 0; w < Width; w++)
