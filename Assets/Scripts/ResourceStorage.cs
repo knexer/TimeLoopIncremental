@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ResourceStorage : MonoBehaviour {
+    private Dictionary<ResourceType, long> Resources = new Dictionary<ResourceType, long>();
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public void AddResource(ResourceType type, long amount)
+    {
+        Resources[type] += amount;
+    }
+
+    public long GetResourceAmount(ResourceType type)
+    {
+        long amount;
+        Resources.TryGetValue(type, out amount);
+        return amount;
+    }
 }
