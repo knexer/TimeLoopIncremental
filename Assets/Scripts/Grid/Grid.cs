@@ -62,6 +62,7 @@ public class Grid : MonoBehaviour {
         GameObject cell = Instantiate(CellPrefab, transform, false);
 
         cell.name += " " + pos.ToString();
+        cell.transform.position = gridToWorldSpace(pos);
 
         return cell;
     }
