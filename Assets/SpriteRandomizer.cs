@@ -11,7 +11,7 @@ public class SpriteRandomizer : MonoBehaviour {
         BoxCollider2D collider = GetComponent<BoxCollider2D>();
         if (collider != null)
         {
-            collider.size = GetComponent<SpriteRenderer>().bounds.size;
+            collider.size = GetComponent<SpriteRenderer>().sprite.bounds.size;
         }
 	}
 }
