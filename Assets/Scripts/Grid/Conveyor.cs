@@ -123,6 +123,10 @@ public class Conveyor : MonoBehaviour {
         {
             return false;
         }
+        if (CurrentlyConveyedItem == null)
+        {
+            return false;
+        }
 
         return targetMachine.GetComponent<ResourceSink>().CanAcceptItem;
     }

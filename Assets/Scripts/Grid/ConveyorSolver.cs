@@ -23,7 +23,7 @@ public class ConveyorSolver : MonoBehaviour {
 
         // For each destination location, find the conveyor that will place an item in that location if it becomes available.
         Dictionary<GridPosition, Conveyor> winnerConveyors = new Dictionary<GridPosition, Conveyor>();
-        foreach (IGrouping<GridPosition, Conveyor> group in blockedConveyors.GroupBy<Conveyor, GridPosition>((c) => c.GetComponent<GridPositionComponent>().Position))
+        foreach (IGrouping<GridPosition, Conveyor> group in blockedConveyors.GroupBy<Conveyor, GridPosition>((c) => c.ExitLocation))
         {
             // TODO impl round robin tie-breaking
             winnerConveyors[group.Key] = group.First();
@@ -37,10 +37,9 @@ public class ConveyorSolver : MonoBehaviour {
             Conveyor openConveyor = openConveyors.Dequeue();
             if (openConveyor.DeliverItem())
             {
-                Conveyor nextConveyor = winnerConveyors[openConveyor.GetComponent<GridPositionComponent>().Position];
-                if (nextConveyor != null)
+                if (winnerConveyors.ContainsKey(openConveyor.GetComponent<GridPositionComponent>().Position))
                 {
-                    openConveyors.Enqueue(nextConveyor);
+                    openConveyors.Enqueue(winnerConveyors[openConveyor.GetComponent<GridPositionComponent>().Position]);
                 }
             }
         }
