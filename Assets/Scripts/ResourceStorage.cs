@@ -7,6 +7,10 @@ public class ResourceStorage : MonoBehaviour {
 
     public void AddResource(ResourceType type, long amount)
     {
+        if (!Resources.ContainsKey(type)) {
+            Resources[type] = 0;
+        }
+
         Resources[type] += amount;
     }
 

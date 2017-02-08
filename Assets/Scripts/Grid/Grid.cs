@@ -15,6 +15,8 @@ public class Grid : MonoBehaviour {
     private float CellHeight = 1;
     public int NumInputs = 1;
     public GridInput InputPrefab;
+    public int NumOutputs = 1;
+    public GridOutput OutputPrefab;
 
     private GameObject[,] GridCells;
     private GridPositionComponent[,] GridObjects;
@@ -51,7 +53,19 @@ public class Grid : MonoBehaviour {
             GridPositionComponent positionHolder = currentInput.GetComponent<GridPositionComponent>();
             positionHolder.InitialPosition = new GridPosition(cellsToTheLeft, 0);
         }
-	}
+
+        // Create the outputs
+        for (int i = 0; i < NumOutputs; i++)
+        {
+            float cellFractionToTheLeft = ((float)i + 1) / (NumOutputs + 1);
+            int cellsToTheLeft = Mathf.FloorToInt(cellFractionToTheLeft * Width);
+
+            GridOutput currentOutput = Instantiate(OutputPrefab, transform, false);
+
+            GridPositionComponent positionHolder = currentOutput.GetComponent<GridPositionComponent>();
+            positionHolder.InitialPosition = new GridPosition(cellsToTheLeft, Height - 1);
+        }
+    }
 
     void Start ()
     {
