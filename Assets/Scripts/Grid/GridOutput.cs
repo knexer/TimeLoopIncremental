@@ -19,7 +19,7 @@ public class GridOutput : MonoBehaviour {
             Debug.Log(ItemDestination);
             Debug.Log(item);
             ItemDestination.AddResource(item.ResourceType, 1);
-            // TODO destroy the in-game item
+            Destroy(item.gameObject);
             return true;
         };
 	}
