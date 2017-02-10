@@ -46,12 +46,9 @@ public class Grid : MonoBehaviour {
             float cellFractionToTheLeft = ((float) i + 1) / (NumInputs + 1);
             int cellsToTheLeft = Mathf.FloorToInt(cellFractionToTheLeft * Width);
 
-            GridInput currentInput = Instantiate(InputPrefab, transform, false);
+            GridInput currentInput = ForceSpawnMachineAt(InputPrefab, new GridPosition(cellsToTheLeft, 0));
 
             currentInput.ProvidedResource = ResourceType.IRON;
-
-            GridPositionComponent positionHolder = currentInput.GetComponent<GridPositionComponent>();
-            positionHolder.InitialPosition = new GridPosition(cellsToTheLeft, 0);
         }
 
         // Create the outputs
@@ -60,10 +57,7 @@ public class Grid : MonoBehaviour {
             float cellFractionToTheLeft = ((float)i + 1) / (NumOutputs + 1);
             int cellsToTheLeft = Mathf.FloorToInt(cellFractionToTheLeft * Width);
 
-            GridOutput currentOutput = Instantiate(OutputPrefab, transform, false);
-
-            GridPositionComponent positionHolder = currentOutput.GetComponent<GridPositionComponent>();
-            positionHolder.InitialPosition = new GridPosition(cellsToTheLeft, Height - 1);
+            GridOutput currentOutput = ForceSpawnMachineAt(OutputPrefab, new GridPosition(cellsToTheLeft, Height - 1));
         }
     }
 
@@ -114,6 +108,18 @@ public class Grid : MonoBehaviour {
         return previous;
     }
 
+    public T TrySpawnMachineAt<T>(T prefab, GridPosition pos, Action<T> beforeAwake = null) where T : MonoBehaviour
+    {
+        Action<GameObject> wrappedAwake = null;
+        if (beforeAwake != null)
+        {
+            wrappedAwake = (go) => beforeAwake(go.GetComponent<T>());
+        }
+
+        GameObject gameObject = TrySpawnMachineAt(prefab.gameObject, pos, wrappedAwake);
+        return gameObject.GetComponent<T>();
+    }
+
     /// <summary>
     /// Spawns an instance of machinePrefab at pos iff there's not already a machine at pos.
     /// </summary>
@@ -127,6 +133,18 @@ public class Grid : MonoBehaviour {
         if (GetGridObjectAt(pos) != null) return null;
 
         return ForceSpawnMachineAt(machinePrefab, pos, beforeAwake);
+    }
+
+    public T ForceSpawnMachineAt<T>(T prefab, GridPosition pos, Action<T> beforeAwake = null) where T : MonoBehaviour
+    {
+        Action<GameObject> wrappedAwake = null;
+        if (beforeAwake != null)
+        {
+            wrappedAwake = (go) => beforeAwake(go.GetComponent<T>());
+        }
+
+        GameObject gameObject = ForceSpawnMachineAt(prefab.gameObject, pos, wrappedAwake);
+        return gameObject.GetComponent<T>();
     }
 
     /// <summary>
@@ -146,7 +164,10 @@ public class Grid : MonoBehaviour {
         GameObject machine = Instantiate(machinePrefab, transform, false);
         machine.GetComponent<GridPositionComponent>().InitialPosition = pos;
 
-        beforeAwake(machine);
+        if (beforeAwake != null)
+        {
+            beforeAwake(machine);
+        }
 
         machine.SetActive(wasActive);
         machinePrefab.SetActive(wasActive);
