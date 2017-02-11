@@ -4,23 +4,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ResourceStorageDisplay : MonoBehaviour {
+public class ResourceStorageDisplay : MonoBehaviour
+{
+    public GameObject ResourceDisplayPrefab;
+    public ResourceSprites ResourceSprites;
+
     private ResourceStorage Storage;
-    private Text DisplayLabel;
+    private Dictionary<ResourceType, Text> ResourceDisplays;
 
     void Awake()
     {
         Storage = GetComponentInParent<ResourceStorage>();
-        DisplayLabel = GetComponent<Text>();
+        ResourceDisplays = new Dictionary<ResourceType, Text>();
+
+        foreach (ResourceType type in Enum.GetValues(typeof(ResourceType)))
+        {
+            GameObject resourceDisplay = Instantiate(ResourceDisplayPrefab, gameObject.transform, false);
+            ResourceDisplays[type] = resourceDisplay.transform.FindChild("Text").GetComponent<Text>();
+            resourceDisplay.transform.FindChild("Image").GetComponent<Image>().sprite = ResourceSprites.GetSpriteForResourceType(type);
+        }
     }
 	
 	void Update () {
-        String label = "";
         foreach (ResourceType type in Enum.GetValues(typeof(ResourceType)))
         {
-            label += type + ": " + Storage.GetResourceAmount(type) + " ";
+            ResourceDisplays[type].text = ": " + Storage.GetResourceAmount(type);
         }
-        
-        DisplayLabel.text = label.TrimEnd(' ');
 	}
 }
