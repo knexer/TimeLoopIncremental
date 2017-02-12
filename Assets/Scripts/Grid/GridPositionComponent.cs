@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -30,5 +31,18 @@ public class GridPositionComponent : MonoBehaviour {
     public void RegisterAsMachine()
     {
         Grid.SetGridObjectAt(Position, this);
+    }
+
+    public IEnumerable<GridPositionComponent> GetAdjacentComponents()
+    {
+        List<GridPosition> adjacentPositions = new List<GridPosition>();
+        adjacentPositions.Add(new GridPosition(Position.X + 1, Position.Y));
+        adjacentPositions.Add(new GridPosition(Position.X - 1, Position.Y));
+        adjacentPositions.Add(new GridPosition(Position.X, Position.Y + 1));
+        adjacentPositions.Add(new GridPosition(Position.X, Position.Y - 1));
+
+        return adjacentPositions
+            .Select((pos) => Grid.GetGridObjectAt(pos))
+            .Where((pos) => pos != null);
     }
 }

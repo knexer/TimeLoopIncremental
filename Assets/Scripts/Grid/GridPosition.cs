@@ -38,6 +38,22 @@ public class GridPosition
         return new Vector2(X, Y);
     }
 
+    public override bool Equals(object obj)
+    {
+        GridPosition other = obj as GridPosition;
+        if (other == null)
+        {
+            return false;
+        }
+
+        return X.Equals(other.X) && Y.Equals(other.Y);
+    }
+
+    public override int GetHashCode()
+    {
+        return X.GetHashCode() + 31 * Y.GetHashCode();
+    }
+
     public override string ToString()
     {
         return "{" + X + ", " + Y + "}";
