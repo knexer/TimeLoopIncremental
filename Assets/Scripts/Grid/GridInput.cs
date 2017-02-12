@@ -17,28 +17,25 @@ public class GridInput : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (ProvidedResource != null)
+        // Create resource(s) and insert them into the grid at the correct location.
+        GridPositionComponent machineAtLocation = PositionHolder.Grid.GetGridObjectAt(PositionHolder.Position);
+        if (machineAtLocation != null)
         {
-            // Create resource(s) and insert them into the grid at the correct location.
-            GridPositionComponent machineAtLocation = PositionHolder.Grid.GetGridObjectAt(PositionHolder.Position);
-            if (machineAtLocation != null)
+            ResourceSink itemDestination = machineAtLocation.GetComponent<ResourceSink>();
+            if (itemDestination != null && itemDestination.CanAcceptItem)
             {
-                ResourceSink itemDestination = machineAtLocation.GetComponent<ResourceSink>();
-                if (itemDestination != null && itemDestination.CanAcceptItem)
-                {
-                    SpawnItemAt(itemDestination);
-                }
+                SpawnItemAt(itemDestination);
             }
         }
     }
 
     private void SpawnItemAt(ResourceSink itemDestination)
     {
-        ResourceType providedResource = ProvidedResource.Value;
+        ResourceType providedResource = ProvidedResource ?? RandomResource();
 
         Resource input = Instantiate(ResourcePrefab, PositionHolder.Grid.transform, false);
 
-        input.ResourceType = RandomResource();
+        input.ResourceType = providedResource;
         input.transform.position = itemDestination.GetComponent<GridPositionComponent>().Grid.gridToWorldSpace(itemDestination.GetComponent<GridPositionComponent>().Position);
 
         if (!itemDestination.OfferItem(input))

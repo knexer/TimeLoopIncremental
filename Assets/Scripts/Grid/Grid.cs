@@ -48,7 +48,8 @@ public class Grid : MonoBehaviour {
 
             GridInput currentInput = ForceSpawnMachineAt(InputPrefab, new GridPosition(cellsToTheLeft, 0));
 
-            currentInput.ProvidedResource = ResourceType.IRON;
+            Array resourceTypes = Enum.GetValues(typeof(ResourceType));
+            currentInput.ProvidedResource = (ResourceType) resourceTypes.GetValue(i % resourceTypes.Length);
         }
 
         // Create the outputs
