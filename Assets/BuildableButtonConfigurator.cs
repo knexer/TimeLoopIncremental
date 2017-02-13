@@ -4,7 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class BuildableButtonConfigurator : MonoBehaviour {
+    [HideInInspector]
     public GameObject BuildablePrefab;
+    [HideInInspector]
+    public ResourceStorage PlayerResources;
 
 	// Use this for initialization
 	void Start () {
@@ -14,6 +17,10 @@ public class BuildableButtonConfigurator : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+        PlacementCostComponent costHolder = BuildablePrefab.GetComponent<PlacementCostComponent>();
+        if (costHolder != null)
+        {
+            GetComponent<Button>().interactable = costHolder.CostIsMet(PlayerResources);
+        }
 	}
 }
