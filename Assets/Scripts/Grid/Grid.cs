@@ -126,7 +126,7 @@ public class Grid : MonoBehaviour {
     /// </summary>
     /// <param name="machinePrefab">The prefab to spawn an instance of.</param>
     /// <param name="pos">The position to place the instance at.</param>
-    /// <returns>The spawned machine, or null if pos was already occupied or was not contained in the grid.</returns>
+    /// <returns>The spawned machine, or null if pos was already occupied, was not contained in the grid, or if the player can't afford the machine.</returns>
     public GameObject TrySpawnMachineAt(GameObject machinePrefab, GridPosition pos, Action<GameObject> beforeAwake = null)
     {
         if (!IsInGrid(pos)) return null;
@@ -153,10 +153,16 @@ public class Grid : MonoBehaviour {
     /// </summary>
     /// <param name="machinePrefab">The prefab to spawn an instance of.</param>
     /// <param name="pos">The position to place the instance at.</param>
-    /// <returns>The spawned machine, or null if pos was not contained in the grid.</returns>
+    /// <returns>The spawned machine, or null if pos was not contained in the grid or the player can't afford the machine.</returns>
     public GameObject ForceSpawnMachineAt(GameObject machinePrefab, GridPosition pos, Action<GameObject> beforeAwake = null)
     {
         if (!IsInGrid(pos)) return null;
+
+        PlacementCostComponent cost = machinePrefab.GetComponent<PlacementCostComponent>();
+        if (cost != null && !cost.ExactCost(GetComponentInParent<ResourceStorage>()))
+        {
+            return null;
+        }
 
         bool wasActive = machinePrefab.activeSelf;
 

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,5 +20,16 @@ public class ResourceStorage : MonoBehaviour {
         long amount;
         Resources.TryGetValue(type, out amount);
         return amount;
+    }
+
+    public bool RemoveResource(ResourceType type, int amount)
+    {
+        if (GetResourceAmount(type) < amount)
+        {
+            return false;
+        }
+
+        Resources[type] -= amount;
+        return true;
     }
 }
