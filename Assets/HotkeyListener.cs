@@ -9,42 +9,32 @@ public class HotkeyListener : MonoBehaviour {
     [HideInInspector]
     public GridPosition SpawnPosition;
 
-    public GameObject ConveyorPrefab;
-    public GameObject FactoryPrefab;
-
     private Grid ContainingGrid;
+    private BuildablePrefabs Buildables;
 
     void OnMouseOver()
     {
-        if (Input.GetKeyDown(KeyCode.W))
+        foreach (GameObject buildable in Buildables.Buildables)
         {
-            ContainingGrid.TrySpawnMachineAt(ConveyorPrefab, SpawnPosition, (machine) => machine.GetComponent<Conveyor>().InitialOrientation = Direction.UP);
-        }
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            ContainingGrid.TrySpawnMachineAt(ConveyorPrefab, SpawnPosition, (machine) => machine.GetComponent<Conveyor>().InitialOrientation = Direction.LEFT);
-        }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            ContainingGrid.TrySpawnMachineAt(ConveyorPrefab, SpawnPosition, (machine) => machine.GetComponent<Conveyor>().InitialOrientation = Direction.DOWN);
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            ContainingGrid.TrySpawnMachineAt(ConveyorPrefab, SpawnPosition, (machine) => machine.GetComponent<Conveyor>().InitialOrientation = Direction.RIGHT);
-        }
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            ContainingGrid.TrySpawnMachineAt(FactoryPrefab, SpawnPosition);
-        }
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            ContainingGrid.GetGridObjectAt(SpawnPosition).GetComponent<GridMachine>().TryDestroy();
+            HotkeyBuildable hotkey = buildable.GetComponent<HotkeyBuildable>();
+            if (Input.GetKeyDown(hotkey.Hotkey.ToLowerInvariant()))
+            {
+                if (hotkey.IsDestroy)
+                {
+                    ContainingGrid.GetGridObjectAt(SpawnPosition).GetComponent<GridMachine>().TryDestroy();
+                }
+                else
+                {
+                    ContainingGrid.TrySpawnMachineAt(buildable, SpawnPosition);
+                }
+            }
         }
     }
 
 	// Use this for initialization
 	void Start () {
         ContainingGrid = GetComponentInParent<Grid>();
+        Buildables = GetComponentInParent<BuildablePrefabs>();
 	}
 	
 	// Update is called once per frame
