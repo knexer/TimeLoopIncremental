@@ -10,6 +10,7 @@ public class HotkeyListener : MonoBehaviour {
     public GridPosition SpawnPosition;
 
     public GameObject ConveyorPrefab;
+    public GameObject FactoryPrefab;
 
     private Grid ContainingGrid;
 
@@ -29,7 +30,15 @@ public class HotkeyListener : MonoBehaviour {
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
-             ContainingGrid.TrySpawnMachineAt(ConveyorPrefab, SpawnPosition, (machine) => machine.GetComponent<Conveyor>().InitialOrientation = Direction.RIGHT);
+            ContainingGrid.TrySpawnMachineAt(ConveyorPrefab, SpawnPosition, (machine) => machine.GetComponent<Conveyor>().InitialOrientation = Direction.RIGHT);
+        }
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            ContainingGrid.TrySpawnMachineAt(FactoryPrefab, SpawnPosition);
+        }
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            ContainingGrid.GetGridObjectAt(SpawnPosition).GetComponent<GridMachine>().TryDestroy();
         }
     }
 

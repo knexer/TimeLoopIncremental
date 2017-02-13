@@ -56,6 +56,13 @@ public class Conveyor : MonoBehaviour {
         Solver.RegisterConveyor(this);
     }
 
+    void OnDestroy()
+    {
+        Solver.DeregisterConveyor(this);
+
+        Destroy(CurrentlyConveyedItem.gameObject);
+    }
+
     void LateUpdate ()
     {
         if (CurrentlyConveyedItem != null)
