@@ -8,18 +8,15 @@ public class BuildablesButtonMaker : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        ResourceStorage[] resourceStorages = FindObjectsOfType<ResourceStorage>();
-        if (resourceStorages.Length > 1)
-        {
-            throw new InvalidOperationException("More than one ResourceStorage exists in the scene!");
-        }
+        PrestigeController prestigeController = FindObjectOfType<PrestigeController>();
+        ResourceStorage resourceStorages = prestigeController.CurrentPrestige.GetComponent<ResourceStorage>();
 
-		foreach (GameObject buildablePrefab in FindObjectOfType<BuildablePrefabs>().Buildables)
+		foreach (GameObject buildablePrefab in prestigeController.CurrentPrestige.GetComponent<BuildablePrefabs>().Buildables)
         {
             GameObject buildablesButton = Instantiate(BuildablesButtonPrefab, gameObject.transform, false);
             BuildableButtonConfigurator configurator = buildablesButton.GetComponent<BuildableButtonConfigurator>();
             configurator.BuildablePrefab = buildablePrefab;
-            configurator.PlayerResources = resourceStorages[0];
+            configurator.PlayerResources = resourceStorages;
         }
 	}
 }
