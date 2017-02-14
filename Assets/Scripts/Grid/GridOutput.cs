@@ -15,9 +15,6 @@ public class GridOutput : MonoBehaviour {
 
         ItemSource.DeliverItem = (item) =>
         {
-            Debug.Log(new System.Diagnostics.StackTrace());
-            Debug.Log(ItemDestination);
-            Debug.Log(item);
             ItemDestination.AddResource(item.ResourceType, 1);
             Destroy(item.gameObject);
             return true;
