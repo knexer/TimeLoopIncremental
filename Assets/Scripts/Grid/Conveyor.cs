@@ -60,7 +60,10 @@ public class Conveyor : MonoBehaviour {
     {
         Solver.DeregisterConveyor(this);
 
-        Destroy(CurrentlyConveyedItem.gameObject);
+        if (CurrentlyConveyedItem != null)
+        {
+            Destroy(CurrentlyConveyedItem.gameObject);
+        }
     }
 
     void LateUpdate ()
