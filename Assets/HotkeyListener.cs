@@ -17,11 +17,14 @@ public class HotkeyListener : MonoBehaviour {
         foreach (GameObject buildable in Buildables.Buildables)
         {
             HotkeyBuildable hotkey = buildable.GetComponent<HotkeyBuildable>();
-            if (Input.GetKeyDown(hotkey.Hotkey.ToLowerInvariant()))
+            if (Input.GetKey(hotkey.Hotkey.ToLowerInvariant()))
             {
                 if (hotkey.IsDestroy)
                 {
-                    ContainingGrid.GetGridObjectAt(SpawnPosition).GetComponent<GridMachine>().TryDestroy();
+                    GridPositionComponent currentMachine = ContainingGrid.GetGridObjectAt(SpawnPosition);
+                    if (currentMachine != null) {
+                        currentMachine.GetComponent<GridMachine>().TryDestroy();
+                    }
                 }
                 else
                 {
