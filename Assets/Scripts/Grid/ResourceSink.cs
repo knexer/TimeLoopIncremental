@@ -5,23 +5,17 @@ using UnityEngine;
 
 // TODO implement stuff
 public class ResourceSink : MonoBehaviour {
-    public bool CanAcceptItem;
-
-    public Func<Resource, bool> DeliverItem;
+    public Predicate<ResourceType> CanAcceptItem;
+    public Func<Resource, bool> DeliverItem { set; private get; }
 
     public bool OfferItem(Resource item)
     {
-        if (CanAcceptItem)
+        if (CanAcceptItem(item.ResourceType))
         {
-            CanAcceptItem = DeliverItem(item);
+            DeliverItem(item);
             return true;
         }
 
         return false;
     }
-
-	// Use this for initialization
-	void Start () {
-        CanAcceptItem = true;
-	}
 }

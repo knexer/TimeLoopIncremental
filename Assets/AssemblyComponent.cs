@@ -16,13 +16,11 @@ public class AssemblyComponent : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        GetComponent<ResourceSink>().CanAcceptItem = true;
+        GetComponent<ResourceSink>().CanAcceptItem = (itemType) => itemType.Equals(input);
+        
         GetComponent<ResourceSink>().DeliverItem = (item) =>
         {
-            if (item.ResourceType.Equals(input))
-            {
-                inputQuantity++;
-            }
+            inputQuantity++;
 
             Destroy(item.gameObject);
 
@@ -51,7 +49,7 @@ public class AssemblyComponent : MonoBehaviour {
             return;
         }
 
-        if (!position.GetComponent<ResourceSink>().CanAcceptItem)
+        if (!position.GetComponent<ResourceSink>().CanAcceptItem(output))
         {
             return;
         }

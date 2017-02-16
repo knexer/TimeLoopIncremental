@@ -37,6 +37,7 @@ public class Conveyor : MonoBehaviour {
         PositionHolder = GetComponent<GridPositionComponent>();
 
         ItemSource = GetComponent<ResourceSink>();
+        ItemSource.CanAcceptItem = (itemType) => CurrentlyConveyedItem == null;
         ItemSource.DeliverItem = (item) =>
         {
             CurrentlyConveyedItem = item;
@@ -115,7 +116,7 @@ public class Conveyor : MonoBehaviour {
             return false;
         }
 
-        return targetMachine.GetComponent<ResourceSink>().CanAcceptItem;
+        return targetMachine.GetComponent<ResourceSink>().CanAcceptItem(CurrentlyConveyedItem.ResourceType);
     }
 
     /// <summary>
@@ -128,7 +129,6 @@ public class Conveyor : MonoBehaviour {
         {
             CurrentlyConveyedItem = null;
             ReadyToOffer = false;
-            ItemSource.CanAcceptItem = true;
             return true;
         }
 

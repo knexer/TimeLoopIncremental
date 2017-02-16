@@ -13,6 +13,7 @@ public class GridOutput : MonoBehaviour {
         ItemDestination = GetComponentInParent<ResourceStorage>();
         ItemSource = GetComponent<ResourceSink>();
 
+        ItemSource.CanAcceptItem = (itemType) => true;
         ItemSource.DeliverItem = (item) =>
         {
             ItemDestination.AddResource(item.ResourceType, 1);

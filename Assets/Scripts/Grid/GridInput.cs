@@ -22,17 +22,16 @@ public class GridInput : MonoBehaviour {
         if (machineAtLocation != null)
         {
             ResourceSink itemDestination = machineAtLocation.GetComponent<ResourceSink>();
-            if (itemDestination != null && itemDestination.CanAcceptItem)
+            ResourceType providedResource = ProvidedResource ?? RandomResource();
+            if (itemDestination != null && itemDestination.CanAcceptItem(providedResource))
             {
-                SpawnItemAt(itemDestination);
+                SpawnItemAt(itemDestination, providedResource);
             }
         }
     }
 
-    private void SpawnItemAt(ResourceSink itemDestination)
+    private void SpawnItemAt(ResourceSink itemDestination, ResourceType providedResource)
     {
-        ResourceType providedResource = ProvidedResource ?? RandomResource();
-
         Resource input = Instantiate(ResourcePrefab, PositionHolder.Grid.transform, false);
 
         input.ResourceType = providedResource;
