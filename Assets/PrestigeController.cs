@@ -1,12 +1,22 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PrestigeController : MonoBehaviour {
-    public GameObject PrestigePrefab;
+    //// UNITY CONFIGURATION
+    [SerializeField]
+    private GameObject PrestigePrefab;
+    //// END UNITY CONFIGURATION
 
     [HideInInspector]
     public GameObject CurrentPrestige;
+
+    /// <summary>
+    /// Fired immediately before a prestige occurs.
+    /// GameObject parameter: the current prestige.
+    /// </summary>
+    public event Action<GameObject> OnPrestige;
 
 	// Use this for initialization
 	void Awake () {
@@ -23,6 +33,11 @@ public class PrestigeController : MonoBehaviour {
 
     private void DoPrestige()
     {
+        if (OnPrestige != null)
+        {
+            OnPrestige(CurrentPrestige);
+        }
+
         CurrentPrestige = Instantiate(PrestigePrefab, transform, false);
         CurrentPrestige.name = "Prestige " + transform.childCount;
     }
