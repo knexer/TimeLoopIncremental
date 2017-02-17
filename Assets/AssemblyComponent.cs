@@ -41,9 +41,16 @@ public class AssemblyComponent : MonoBehaviour {
         {
             if (inputQuantity > 0 && outputQuantity < 4)
             {
-                outputQuantity += Mathf.FloorToInt(Mathf.Sqrt(upgradeLevel.UpgradeLevel));
-                inputQuantity--;
+                float expectedOutputQuantity = 1 + 0.25f * (upgradeLevel.UpgradeLevel - 1);
+                int actualOutputQuantity = Mathf.FloorToInt(expectedOutputQuantity);
+                float entropy = UnityEngine.Random.Range(0.0f, 1.0f);
+                if (actualOutputQuantity + entropy < expectedOutputQuantity)
+                {
+                    actualOutputQuantity++;
+                }
 
+                outputQuantity += actualOutputQuantity;
+                inputQuantity--;
             }
         }
 
