@@ -9,6 +9,7 @@ public class GridInput : MonoBehaviour {
     public float ProvidedPerSecond;
 
     private GridPositionComponent PositionHolder;
+    private float lastProvidedTime = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -17,15 +18,19 @@ public class GridInput : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        // Create resource(s) and insert them into the grid at the correct location.
-        GridPositionComponent machineAtLocation = PositionHolder.Grid.GetGridObjectAt(PositionHolder.Position);
-        if (machineAtLocation != null)
+        if (lastProvidedTime + 1 / ProvidedPerSecond <= Time.time)
         {
-            ResourceSink itemDestination = machineAtLocation.GetComponent<ResourceSink>();
-            ResourceType providedResource = ProvidedResource ?? RandomResource();
-            if (itemDestination != null && itemDestination.CanAcceptItem(providedResource))
+            // Create resource(s) and insert them into the grid at the correct location.
+            GridPositionComponent machineAtLocation = PositionHolder.Grid.GetGridObjectAt(PositionHolder.Position);
+            if (machineAtLocation != null)
             {
-                SpawnItemAt(itemDestination, providedResource);
+                ResourceSink itemDestination = machineAtLocation.GetComponent<ResourceSink>();
+                ResourceType providedResource = ProvidedResource ?? RandomResource();
+                if (itemDestination != null && itemDestination.CanAcceptItem(providedResource))
+                {
+                    SpawnItemAt(itemDestination, providedResource);
+                    lastProvidedTime = Time.time;
+                }
             }
         }
     }

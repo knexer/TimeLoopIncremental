@@ -11,12 +11,14 @@ public class AssemblyComponent : MonoBehaviour {
 
     public Resource ResourcePrefab;
 
+    public float CraftedPerSecond;
+
+    private float lastCraftedTime = 0;
     private int inputQuantity = 0;
-    private int outputQuantity = 0;
 
 	// Use this for initialization
 	void Start () {
-        GetComponent<ResourceSink>().CanAcceptItem = (itemType) => itemType.Equals(input);
+        GetComponent<ResourceSink>().CanAcceptItem = (itemType) => itemType.Equals(input) && inputQuantity == 0;
         
         GetComponent<ResourceSink>().DeliverItem = (item) =>
         {
@@ -30,35 +32,39 @@ public class AssemblyComponent : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        outputQuantity += inputQuantity;
-        inputQuantity = 0;
-        IEnumerable<GridPositionComponent> exitLocations = GetComponent<GridPositionComponent>().GetAdjacentComponents()
-            .Where((pos) => pos.GetComponent<ResourceSink>() != null)
-            .Where((pos) => !(pos.GetComponent<Conveyor>() != null && pos.GetComponent<Conveyor>().ExitLocation.Equals(GetComponent<GridPositionComponent>().Position)));
-
-        foreach (GridPositionComponent exitLocation in exitLocations)
+        if (lastCraftedTime + 1 / CraftedPerSecond <= Time.time)
         {
-            TrySpawnOutputAt(exitLocation);
+            if (inputQuantity > 0)
+            {
+                IEnumerable<GridPositionComponent> exitLocations = GetComponent<GridPositionComponent>().GetAdjacentComponents()
+                    .Where((pos) => pos.GetComponent<ResourceSink>() != null)
+                    .Where((pos) => !(pos.GetComponent<Conveyor>() != null && pos.GetComponent<Conveyor>().ExitLocation.Equals(GetComponent<GridPositionComponent>().Position)));
+
+                foreach (GridPositionComponent exitLocation in exitLocations)
+                {
+                    if (TrySpawnOutputAt(exitLocation))
+                    {
+                        lastCraftedTime = Time.time;
+                        inputQuantity--;
+                        break;
+                    }
+                }
+            }
         }
 	}
 
-    private void TrySpawnOutputAt(GridPositionComponent position)
+    private bool TrySpawnOutputAt(GridPositionComponent position)
     {
-        if (outputQuantity <= 0)
-        {
-            return;
-        }
-
         if (!position.GetComponent<ResourceSink>().CanAcceptItem(output))
         {
-            return;
+            return false;
         }
-
-        outputQuantity--;
 
         Resource outputResource = Instantiate(ResourcePrefab, transform.parent);
         outputResource.ResourceType = output;
         outputResource.transform.position = transform.position;
         position.GetComponent<ResourceSink>().OfferItem(outputResource);
+
+        return true;
     }
 }
