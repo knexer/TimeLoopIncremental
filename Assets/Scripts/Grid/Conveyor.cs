@@ -20,6 +20,7 @@ public class Conveyor : MonoBehaviour {
     private ConveyorSolver Solver;
     private GridPositionComponent PositionHolder;
     private ResourceSink ItemSource;
+    private Upgradeable upgradeable;
 
     private float LastConveyanceTime;
     private Vector2 initialPosition;
@@ -45,6 +46,8 @@ public class Conveyor : MonoBehaviour {
             initialPosition = item.transform.position;
             return false;
         };
+
+        upgradeable = GetComponent<Upgradeable>();
 
         ReadyToOffer = false;
 
@@ -74,7 +77,7 @@ public class Conveyor : MonoBehaviour {
             if (!ReadyToOffer)
             {
                 //do two-phase movement; from entry point to center to exit point
-                float conveyanceProportion = (Time.time - LastConveyanceTime) / ConveyingTimeSeconds;
+                float conveyanceProportion = (Time.time - LastConveyanceTime) / (ConveyingTimeSeconds / upgradeable.UpgradeLevel);
 
                 if (conveyanceProportion < 0.5f)
                 {
@@ -96,7 +99,7 @@ public class Conveyor : MonoBehaviour {
                     //complete conveying the item
                     ReadyToOffer = true;
 
-                    LastConveyanceTime += ConveyingTimeSeconds;
+                    LastConveyanceTime += ConveyingTimeSeconds / upgradeable.UpgradeLevel;
                 }
             }
         }

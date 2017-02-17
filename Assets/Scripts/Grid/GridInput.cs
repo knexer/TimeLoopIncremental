@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,15 +11,17 @@ public class GridInput : MonoBehaviour {
 
     private GridPositionComponent PositionHolder;
     private float lastProvidedTime = 0;
+    private Upgradeable upgradeLevel;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         PositionHolder = GetComponent<GridPositionComponent>();
+        upgradeLevel = GetComponent<Upgradeable>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        if (lastProvidedTime + 1 / ProvidedPerSecond <= Time.time)
+        if (lastProvidedTime + 1 / (ProvidedPerSecond * upgradeLevel.UpgradeLevel) <= Time.time)
         {
             // Create resource(s) and insert them into the grid at the correct location.
             GridPositionComponent machineAtLocation = PositionHolder.Grid.GetGridObjectAt(PositionHolder.Position);
@@ -50,6 +53,6 @@ public class GridInput : MonoBehaviour {
 
     private ResourceType RandomResource()
     {
-        return (ResourceType) Random.Range(0, 3);
+        return (ResourceType)UnityEngine.Random.Range(0, 3);
     }
 }

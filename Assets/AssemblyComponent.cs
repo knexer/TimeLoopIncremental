@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -15,9 +16,11 @@ public class AssemblyComponent : MonoBehaviour {
 
     private float lastCraftedTime = 0;
     private int inputQuantity = 0;
+    private int outputQuantity = 0;
+    private Upgradeable upgradeLevel;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         GetComponent<ResourceSink>().CanAcceptItem = (itemType) => itemType.Equals(input) && inputQuantity == 0;
         
         GetComponent<ResourceSink>().DeliverItem = (item) =>
@@ -28,24 +31,36 @@ public class AssemblyComponent : MonoBehaviour {
 
             return true;
         };
+
+        upgradeLevel = GetComponent<Upgradeable>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        if (lastCraftedTime + 1 / CraftedPerSecond <= Time.time)
+        if (lastCraftedTime + 1 / (CraftedPerSecond * upgradeLevel.UpgradeLevel) <= Time.time)
         {
-            if (inputQuantity > 0)
+            if (inputQuantity > 0 && outputQuantity < 4)
             {
-                IEnumerable<GridPositionComponent> exitLocations = GetComponent<GridPositionComponent>().GetAdjacentComponents()
-                    .Where((pos) => pos.GetComponent<ResourceSink>() != null)
-                    .Where((pos) => !(pos.GetComponent<Conveyor>() != null && pos.GetComponent<Conveyor>().ExitLocation.Equals(GetComponent<GridPositionComponent>().Position)));
+                outputQuantity += Mathf.FloorToInt(Mathf.Sqrt(upgradeLevel.UpgradeLevel));
+                inputQuantity--;
 
-                foreach (GridPositionComponent exitLocation in exitLocations)
+            }
+        }
+
+        if (outputQuantity > 0)
+        {
+            IEnumerable<GridPositionComponent> exitLocations = GetComponent<GridPositionComponent>().GetAdjacentComponents()
+                        .Where((pos) => pos.GetComponent<ResourceSink>() != null)
+                        .Where((pos) => !(pos.GetComponent<Conveyor>() != null && pos.GetComponent<Conveyor>().ExitLocation.Equals(GetComponent<GridPositionComponent>().Position)));
+
+            foreach (GridPositionComponent exitLocation in exitLocations)
+            {
+                if (TrySpawnOutputAt(exitLocation))
                 {
-                    if (TrySpawnOutputAt(exitLocation))
+                    lastCraftedTime = Time.time;
+                    outputQuantity--;
+                    if (outputQuantity <= 0)
                     {
-                        lastCraftedTime = Time.time;
-                        inputQuantity--;
                         break;
                     }
                 }

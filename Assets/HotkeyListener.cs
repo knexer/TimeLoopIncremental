@@ -26,6 +26,18 @@ public class HotkeyListener : MonoBehaviour {
                         currentMachine.GetComponent<GridMachine>().TryDestroy();
                     }
                 }
+                else if (hotkey.IsUpgrade)
+                {
+                    GridPositionComponent currentMachine = ContainingGrid.GetGridObjectAt(SpawnPosition);
+                    if (currentMachine != null)
+                    {
+                        Upgradeable upgradeable = currentMachine.GetComponent<Upgradeable>();
+                        if (upgradeable != null)
+                        {
+                            upgradeable.TryDoUpgrade(transform.GetComponentInParent<ResourceStorage>());
+                        }
+                    }
+                }
                 else
                 {
                     ContainingGrid.TrySpawnMachineAt(buildable, SpawnPosition);
