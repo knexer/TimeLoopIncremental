@@ -147,7 +147,7 @@ public class Grid : MonoBehaviour {
         if (!IsInGrid(pos)) return null;
 
         PlacementCostComponent cost = machinePrefab.GetComponent<PlacementCostComponent>();
-        if (cost != null && !cost.ExactCost(GetComponentInParent<ResourceStorage>()))
+        if (cost != null && !GetComponentInParent<ResourceStorage>().Resources.RemoveResources(cost.Cost))
         {
             return null;
         }

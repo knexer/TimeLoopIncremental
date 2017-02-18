@@ -28,7 +28,7 @@ public class ResourceStorageDisplay : MonoBehaviour
 	void Update () {
         foreach (ResourceType type in Enum.GetValues(typeof(ResourceType)))
         {
-            ResourceDisplays[type].text = ": " + Storage.GetResourceAmount(type);
+            ResourceDisplays[type].text = ": " + Storage.Resources.GetResourceAmount(type);
         }
 	}
 }

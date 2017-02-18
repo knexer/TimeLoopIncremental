@@ -20,7 +20,7 @@ public class Upgradeable : MonoBehaviour {
 
     public bool TryDoUpgrade(ResourceStorage paymentInstrument)
     {
-        if (paymentInstrument.RemoveResource(UpgradeCost.Type, UpgradeCost.Amount))
+        if (paymentInstrument.Resources.RemoveResource(UpgradeCost.Type, UpgradeCost.Amount))
         {
             UpgradeLevel++;
             return true;

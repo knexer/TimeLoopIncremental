@@ -20,7 +20,7 @@ public class BuildableButtonConfigurator : MonoBehaviour {
         PlacementCostComponent costHolder = BuildablePrefab.GetComponent<PlacementCostComponent>();
         if (costHolder != null)
         {
-            GetComponent<Button>().interactable = costHolder.CostIsMet(PlayerResources);
+            GetComponent<Button>().interactable = PlayerResources.Resources.IsAtLeast(costHolder.Cost);
         }
 	}
 }

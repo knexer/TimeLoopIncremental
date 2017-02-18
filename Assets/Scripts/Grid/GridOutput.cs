@@ -16,7 +16,7 @@ public class GridOutput : MonoBehaviour {
         ItemSource.CanAcceptItem = (itemType) => true;
         ItemSource.DeliverItem = (item) =>
         {
-            ItemDestination.AddResource(item.ResourceType, 1);
+            ItemDestination.Resources.AddResource(item.ResourceType, 1);
             Destroy(item.gameObject);
             return true;
         };
