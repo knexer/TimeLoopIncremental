@@ -109,15 +109,9 @@ public class Grid : MonoBehaviour {
         return previous;
     }
 
-    public T TrySpawnMachineAt<T>(T prefab, GridPosition pos, Action<T> beforeAwake = null) where T : MonoBehaviour
+    public T TrySpawnMachineAt<T>(T prefab, GridPosition pos) where T : MonoBehaviour
     {
-        Action<GameObject> wrappedAwake = null;
-        if (beforeAwake != null)
-        {
-            wrappedAwake = (go) => beforeAwake(go.GetComponent<T>());
-        }
-
-        GameObject gameObject = TrySpawnMachineAt(prefab.gameObject, pos, wrappedAwake);
+        GameObject gameObject = TrySpawnMachineAt(prefab.gameObject, pos);
         return gameObject.GetComponent<T>();
     }
 
@@ -127,24 +121,18 @@ public class Grid : MonoBehaviour {
     /// <param name="machinePrefab">The prefab to spawn an instance of.</param>
     /// <param name="pos">The position to place the instance at.</param>
     /// <returns>The spawned machine, or null if pos was already occupied, was not contained in the grid, or if the player can't afford the machine.</returns>
-    public GameObject TrySpawnMachineAt(GameObject machinePrefab, GridPosition pos, Action<GameObject> beforeAwake = null)
+    public GameObject TrySpawnMachineAt(GameObject machinePrefab, GridPosition pos)
     {
         if (!IsInGrid(pos)) return null;
 
         if (GetGridObjectAt(pos) != null) return null;
 
-        return ForceSpawnMachineAt(machinePrefab, pos, beforeAwake);
+        return ForceSpawnMachineAt(machinePrefab, pos);
     }
 
-    public T ForceSpawnMachineAt<T>(T prefab, GridPosition pos, Action<T> beforeAwake = null) where T : MonoBehaviour
+    public T ForceSpawnMachineAt<T>(T prefab, GridPosition pos) where T : MonoBehaviour
     {
-        Action<GameObject> wrappedAwake = null;
-        if (beforeAwake != null)
-        {
-            wrappedAwake = (go) => beforeAwake(go.GetComponent<T>());
-        }
-
-        GameObject gameObject = ForceSpawnMachineAt(prefab.gameObject, pos, wrappedAwake);
+        GameObject gameObject = ForceSpawnMachineAt(prefab.gameObject, pos);
         return gameObject.GetComponent<T>();
     }
 
@@ -154,7 +142,7 @@ public class Grid : MonoBehaviour {
     /// <param name="machinePrefab">The prefab to spawn an instance of.</param>
     /// <param name="pos">The position to place the instance at.</param>
     /// <returns>The spawned machine, or null if pos was not contained in the grid or the player can't afford the machine.</returns>
-    public GameObject ForceSpawnMachineAt(GameObject machinePrefab, GridPosition pos, Action<GameObject> beforeAwake = null)
+    public GameObject ForceSpawnMachineAt(GameObject machinePrefab, GridPosition pos)
     {
         if (!IsInGrid(pos)) return null;
 
@@ -170,11 +158,6 @@ public class Grid : MonoBehaviour {
 
         GameObject machine = Instantiate(machinePrefab, transform, false);
         machine.GetComponent<GridPositionComponent>().InitialPosition = pos;
-
-        if (beforeAwake != null)
-        {
-            beforeAwake(machine);
-        }
 
         machine.SetActive(wasActive);
         machinePrefab.SetActive(wasActive);
