@@ -12,7 +12,7 @@ public class PrestigeReplayer : MonoBehaviour {
 
     public void Init(List<IPrestigeAction> actionsToReplay)
     {
-        if (RecordedActions == null)
+        if (RecordedActions != null)
         {
             throw new InvalidOperationException("PrestigeReplayer has already been initiailized.");
         }
@@ -34,12 +34,12 @@ public class PrestigeReplayer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (RecordedActions == null) return;
         ResourceStorage currentStorage = CurrentPrestigeRef.CurrentPrestige.GetComponent<ResourceStorage>();
 
         while (NextAction < RecordedActions.Count
             && currentStorage.Resources.IsAtLeast(RecordedActions[NextAction].Cost)
-            && RecordedActions[NextAction].CanApplyChangeToPrestige(CurrentPrestigeRef.CurrentPrestige)) {
-            RecordedActions[NextAction].ApplyChangeToPrestige(CurrentPrestigeRef.CurrentPrestige);
+            && RecordedActions[NextAction].ApplyChangeToPrestige(CurrentPrestigeRef.CurrentPrestige)) {
             NextAction++;
         }
 	}

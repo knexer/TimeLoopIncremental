@@ -8,19 +8,27 @@ public class BuildPrestigeAction : IPrestigeAction
 {
     private GameObject BuildablePrefab;
     private GridPosition SpawnPosition;
-
     public Resources Cost
     {
-        get { return BuildablePrefab.GetComponent<PlacementCostComponent>().Cost; }
+        get; private set;
     }
 
-    public void ApplyChangeToPrestige(GameObject prestige)
+    public BuildPrestigeAction(GameObject buildablePrefab, GridPosition spawnPosition)
     {
-        throw new NotImplementedException();
+        BuildablePrefab = buildablePrefab;
+        SpawnPosition = spawnPosition;
+        PlacementCostComponent costHolder = buildablePrefab.GetComponent<PlacementCostComponent>();
+        if (costHolder != null)
+        {
+            Cost = costHolder.Cost;
+        } else
+        {
+            Cost = new Resources();
+        }
     }
 
-    public bool CanApplyChangeToPrestige(GameObject prestige)
+    public bool ApplyChangeToPrestige(GameObject prestige)
     {
-        throw new NotImplementedException();
+        return prestige.GetComponentInChildren<Grid>().TrySpawnMachineAt(BuildablePrefab, SpawnPosition) != null;
     }
 }

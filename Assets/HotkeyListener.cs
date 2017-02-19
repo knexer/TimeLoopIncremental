@@ -40,7 +40,11 @@ public class HotkeyListener : MonoBehaviour {
                 }
                 else
                 {
-                    ContainingGrid.TrySpawnMachineAt(buildable, SpawnPosition);
+                    BuildPrestigeAction buildAction = new BuildPrestigeAction(buildable, SpawnPosition);
+                    if (buildAction.ApplyChangeToPrestige(ContainingGrid.gameObject))
+                    {
+                        ContainingGrid.GetComponentInParent<PrestigeRecorder>().RecordAction(buildAction);
+                    }
                 }
             }
         }

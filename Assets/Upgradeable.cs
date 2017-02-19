@@ -29,8 +29,19 @@ public class Upgradeable : MonoBehaviour {
         return false;
     }
 
+    private void Reset(GameObject gameObject)
+    {
+        UpgradeLevel = 1;
+    }
+
     private void Start()
     {
         UpgradeLevel = 1;
+        GetComponentInParent<PrestigeController>().OnPrestige += Reset;
+    }
+
+    private void OnDestroy()
+    {
+        GetComponentInParent<PrestigeController>().OnPrestige -= Reset;
     }
 }
