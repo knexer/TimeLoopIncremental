@@ -12,12 +12,6 @@ public class PrestigeController : MonoBehaviour {
     [HideInInspector]
     public GameObject CurrentPrestige;
 
-    /// <summary>
-    /// Fired immediately before a prestige occurs.
-    /// GameObject parameter: the current prestige.
-    /// </summary>
-    public event Action<GameObject> OnPrestige;
-
 	// Use this for initialization
 	void Awake () {
         DoPrestige();
@@ -33,12 +27,32 @@ public class PrestigeController : MonoBehaviour {
 
     private void DoPrestige()
     {
-        if (OnPrestige != null)
+        List<string> names = new List<string>();
+        List<List<IPrestigeAction>> replays = new List<List<IPrestigeAction>>();
+        for (int i = 0; i < transform.childCount; i++)
         {
-            OnPrestige(CurrentPrestige);
+            GameObject prestige = transform.GetChild(i).gameObject;
+            names.Add(prestige.name);
+            if (prestige.GetComponent<PrestigeReplayer>() != null)
+            {
+                replays.Add(prestige.GetComponent<PrestigeReplayer>().actions);
+            }
+            else
+            {
+                replays.Add(prestige.GetComponent<PrestigeRecorder>().actions);
+            }
+            Destroy(prestige);
         }
 
+        for (int i = 0; i < names.Count; i++)
+        {
+            GameObject previousPrestige = Instantiate(PrestigePrefab, transform, false);
+            previousPrestige.name = names[i];
+            Destroy(previousPrestige.GetComponent<PrestigeRecorder>());
+            previousPrestige.AddComponent<PrestigeReplayer>().Init(replays[i]);
+        }
+        
         CurrentPrestige = Instantiate(PrestigePrefab, transform, false);
-        CurrentPrestige.name = "Prestige " + transform.childCount;
+        CurrentPrestige.name = "Prestige " + names.Count + 1;
     }
 }

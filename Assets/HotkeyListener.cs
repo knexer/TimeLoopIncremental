@@ -54,12 +54,6 @@ public class HotkeyListener : MonoBehaviour {
 	void Start () {
         ContainingGrid = GetComponentInParent<Grid>();
         Buildables = GetComponentInParent<BuildablePrefabs>();
-
-        // Don't allow editing of previous grids.
-        FindObjectOfType<PrestigeController>().OnPrestige += (previousPrestige) =>
-        {
-            Destroy(this);
-        };
 	}
 	
 	// Update is called once per frame
