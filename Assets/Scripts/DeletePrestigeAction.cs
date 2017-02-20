@@ -26,8 +26,9 @@ public class DeletePrestigeAction : IPrestigeAction
         if (currentMachine != null)
         {
             currentMachine.GetComponent<GridMachine>().TryDestroy();
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

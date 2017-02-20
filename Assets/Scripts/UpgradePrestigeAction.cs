@@ -21,10 +21,14 @@ public class UpgradePrestigeAction : IPrestigeAction
 
     public bool ApplyChangeToPrestige(GameObject prestige)
     {
-        Upgradeable upgrade = prestige.GetComponentInChildren<Grid>().GetGridObjectAt(Position).GetComponent<Upgradeable>();
-        if (upgrade != null)
+        GridPositionComponent currentMachine = prestige.GetComponentInChildren<Grid>().GetGridObjectAt(Position);
+        if (currentMachine != null)
         {
-            return upgrade.TryDoUpgrade(prestige.GetComponent<ResourceStorage>());
+            Upgradeable upgrade = currentMachine.GetComponent<Upgradeable>();
+            if (upgrade != null)
+            {
+                return upgrade.TryDoUpgrade(prestige.GetComponent<ResourceStorage>());
+            }
         }
 
         return false;

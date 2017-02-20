@@ -5,9 +5,12 @@ using UnityEngine;
 public class PrestigeRecorder : MonoBehaviour {
     public List<IPrestigeAction> actions;
 
-    public void RecordAction(IPrestigeAction action)
+    public void ApplyAndRecordAction(IPrestigeAction action)
     {
-        actions.Add(action);
+        if (action.ApplyChangeToPrestige(gameObject))
+        {
+            actions.Add(action);
+        }
     }
 
 	// Use this for initialization

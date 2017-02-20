@@ -8,10 +8,10 @@ public class HotkeyListener : MonoBehaviour {
     /// </summary>
     [HideInInspector]
     public GridPosition SpawnPosition;
-
-    private Grid ContainingGrid;
+    
     private ResourceStorage PlayerResources;
     private BuildablePrefabs Buildables;
+    private PrestigeRecorder ActionRecorder;
 
     void OnMouseOver()
     {
@@ -22,40 +22,18 @@ public class HotkeyListener : MonoBehaviour {
             {
                 if (hotkey.IsDestroy)
                 {
-                    GridPositionComponent currentMachine = ContainingGrid.GetGridObjectAt(SpawnPosition);
-                    if (currentMachine != null) {
-                        if (currentMachine.GetComponent<GridMachine>() != null)
-                        {
-                            DeletePrestigeAction deleteAction = new DeletePrestigeAction(new Resources(PlayerResources.Resources), SpawnPosition);
-                            deleteAction.ApplyChangeToPrestige(ContainingGrid.gameObject);
-                            ContainingGrid.GetComponentInParent<PrestigeRecorder>().RecordAction(deleteAction);
-                        }
-                    }
+                    DeletePrestigeAction deleteAction = new DeletePrestigeAction(new Resources(PlayerResources.Resources), SpawnPosition);
+                    ActionRecorder.ApplyAndRecordAction(deleteAction);
                 }
                 else if (hotkey.IsUpgrade)
                 {
-                    GridPositionComponent currentMachine = ContainingGrid.GetGridObjectAt(SpawnPosition);
-                    if (currentMachine != null)
-                    {
-                        Upgradeable upgradeable = currentMachine.GetComponent<Upgradeable>();
-                        if (upgradeable != null)
-                        {
-                            Resources playerResourcesCopy = new Resources(PlayerResources.Resources);
-                            if (upgradeable.TryDoUpgrade(transform.GetComponentInParent<ResourceStorage>()))
-                            {
-                                UpgradePrestigeAction upgradeAction = new UpgradePrestigeAction(playerResourcesCopy, SpawnPosition);
-                                ContainingGrid.GetComponentInParent<PrestigeRecorder>().RecordAction(upgradeAction);
-                            }
-                        }
-                    }
+                    UpgradePrestigeAction upgradeAction = new UpgradePrestigeAction(new Resources(PlayerResources.Resources), SpawnPosition);
+                    ActionRecorder.ApplyAndRecordAction(upgradeAction);
                 }
                 else
                 {
                     BuildPrestigeAction buildAction = new BuildPrestigeAction(buildable, new Resources(PlayerResources.Resources), SpawnPosition);
-                    if (buildAction.ApplyChangeToPrestige(ContainingGrid.gameObject))
-                    {
-                        ContainingGrid.GetComponentInParent<PrestigeRecorder>().RecordAction(buildAction);
-                    }
+                    ActionRecorder.ApplyAndRecordAction(buildAction);
                 }
             }
         }
@@ -63,9 +41,9 @@ public class HotkeyListener : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        ContainingGrid = GetComponentInParent<Grid>();
         PlayerResources = GetComponentInParent<ResourceStorage>();
         Buildables = GetComponentInParent<BuildablePrefabs>();
+        ActionRecorder = GetComponentInParent<PrestigeRecorder>();
 	}
 	
 	// Update is called once per frame
