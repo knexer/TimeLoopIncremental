@@ -40,7 +40,12 @@ public class HotkeyListener : MonoBehaviour {
                         Upgradeable upgradeable = currentMachine.GetComponent<Upgradeable>();
                         if (upgradeable != null)
                         {
-                            upgradeable.TryDoUpgrade(transform.GetComponentInParent<ResourceStorage>());
+                            Resources playerResourcesCopy = new Resources(PlayerResources.Resources);
+                            if (upgradeable.TryDoUpgrade(transform.GetComponentInParent<ResourceStorage>()))
+                            {
+                                UpgradePrestigeAction upgradeAction = new UpgradePrestigeAction(playerResourcesCopy, SpawnPosition);
+                                ContainingGrid.GetComponentInParent<PrestigeRecorder>().RecordAction(upgradeAction);
+                            }
                         }
                     }
                 }
