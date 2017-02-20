@@ -9,6 +9,7 @@ public class GridMachine : MonoBehaviour {
     {
         if (IsDestroyable)
         {
+            GetComponent<GridPositionComponent>().Grid.SetGridObjectAt(GetComponent<GridPositionComponent>().Position, null);
             Destroy(gameObject);
         }
     }

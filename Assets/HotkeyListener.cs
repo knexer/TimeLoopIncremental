@@ -10,6 +10,7 @@ public class HotkeyListener : MonoBehaviour {
     public GridPosition SpawnPosition;
 
     private Grid ContainingGrid;
+    private ResourceStorage PlayerResources;
     private BuildablePrefabs Buildables;
 
     void OnMouseOver()
@@ -23,7 +24,12 @@ public class HotkeyListener : MonoBehaviour {
                 {
                     GridPositionComponent currentMachine = ContainingGrid.GetGridObjectAt(SpawnPosition);
                     if (currentMachine != null) {
-                        currentMachine.GetComponent<GridMachine>().TryDestroy();
+                        if (currentMachine.GetComponent<GridMachine>() != null)
+                        {
+                            DeletePrestigeAction deleteAction = new DeletePrestigeAction(new Resources(PlayerResources.Resources), SpawnPosition);
+                            deleteAction.ApplyChangeToPrestige(ContainingGrid.gameObject);
+                            ContainingGrid.GetComponentInParent<PrestigeRecorder>().RecordAction(deleteAction);
+                        }
                     }
                 }
                 else if (hotkey.IsUpgrade)
@@ -40,7 +46,7 @@ public class HotkeyListener : MonoBehaviour {
                 }
                 else
                 {
-                    BuildPrestigeAction buildAction = new BuildPrestigeAction(buildable, SpawnPosition);
+                    BuildPrestigeAction buildAction = new BuildPrestigeAction(buildable, new Resources(PlayerResources.Resources), SpawnPosition);
                     if (buildAction.ApplyChangeToPrestige(ContainingGrid.gameObject))
                     {
                         ContainingGrid.GetComponentInParent<PrestigeRecorder>().RecordAction(buildAction);
@@ -53,6 +59,7 @@ public class HotkeyListener : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         ContainingGrid = GetComponentInParent<Grid>();
+        PlayerResources = GetComponentInParent<ResourceStorage>();
         Buildables = GetComponentInParent<BuildablePrefabs>();
 	}
 	

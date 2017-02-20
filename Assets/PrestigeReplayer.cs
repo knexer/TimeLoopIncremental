@@ -29,7 +29,7 @@ public class PrestigeReplayer : MonoBehaviour {
         ResourceStorage currentStorage = GetComponent<ResourceStorage>();
 
         while (NextAction < actions.Count
-            && currentStorage.Resources.IsAtLeast(actions[NextAction].Cost)
+            && currentStorage.Resources.IsAtLeast(actions[NextAction].ResourcesThreshold)
             && actions[NextAction].ApplyChangeToPrestige(gameObject)) {
             NextAction++;
         }

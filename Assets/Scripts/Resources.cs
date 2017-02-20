@@ -31,6 +31,16 @@ public class Resources
         }
     }
 
+    public Resources() { }
+
+    public Resources(Resources original)
+    {
+        foreach ( KeyValuePair<ResourceType, int> resource in original.CostDict )
+        {
+            CostDict[resource.Key] = resource.Value;
+        }
+    }
+
     public void AddResource(ResourceType type, int amount)
     {
         if (!CostDict.ContainsKey(type))

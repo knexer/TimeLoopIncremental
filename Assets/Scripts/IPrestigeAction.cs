@@ -6,6 +6,6 @@ using UnityEngine;
 
 public interface IPrestigeAction
 {
-    Resources Cost { get; }
+    Resources ResourcesThreshold { get; }
     bool ApplyChangeToPrestige(GameObject prestige);
 }

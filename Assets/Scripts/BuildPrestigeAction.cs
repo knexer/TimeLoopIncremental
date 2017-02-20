@@ -8,23 +8,16 @@ public class BuildPrestigeAction : IPrestigeAction
 {
     private GameObject BuildablePrefab;
     private GridPosition SpawnPosition;
-    public Resources Cost
+    public Resources ResourcesThreshold
     {
         get; private set;
     }
 
-    public BuildPrestigeAction(GameObject buildablePrefab, GridPosition spawnPosition)
+    public BuildPrestigeAction(GameObject buildablePrefab, Resources playerStorage, GridPosition spawnPosition)
     {
         BuildablePrefab = buildablePrefab;
         SpawnPosition = spawnPosition;
-        PlacementCostComponent costHolder = buildablePrefab.GetComponent<PlacementCostComponent>();
-        if (costHolder != null)
-        {
-            Cost = costHolder.Cost;
-        } else
-        {
-            Cost = new Resources();
-        }
+        ResourcesThreshold = playerStorage;
     }
 
     public bool ApplyChangeToPrestige(GameObject prestige)
