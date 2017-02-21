@@ -16,7 +16,7 @@ public class BuildablesButtonMaker : MonoBehaviour {
             GameObject buildablesButton = Instantiate(BuildablesButtonPrefab, gameObject.transform, false);
             BuildableButtonConfigurator configurator = buildablesButton.GetComponent<BuildableButtonConfigurator>();
             configurator.BuildablePrefab = buildablePrefab;
-            configurator.PlayerResources = resourceStorages;
+            configurator.CurrentPrestigeRef = prestigeController;
         }
 	}
 }

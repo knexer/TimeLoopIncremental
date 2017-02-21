@@ -7,7 +7,7 @@ public class BuildableButtonConfigurator : MonoBehaviour {
     [HideInInspector]
     public GameObject BuildablePrefab;
     [HideInInspector]
-    public ResourceStorage PlayerResources;
+    public PrestigeController CurrentPrestigeRef;
 
 	// Use this for initialization
 	void Start () {
@@ -20,7 +20,7 @@ public class BuildableButtonConfigurator : MonoBehaviour {
         PlacementCostComponent costHolder = BuildablePrefab.GetComponent<PlacementCostComponent>();
         if (costHolder != null)
         {
-            GetComponent<Button>().interactable = PlayerResources.Resources.IsAtLeast(costHolder.Cost);
+            GetComponent<Button>().interactable = CurrentPrestigeRef.CurrentPrestige.GetComponent<ResourceStorage>().Resources.IsAtLeast(costHolder.Cost);
         }
 	}
 }
