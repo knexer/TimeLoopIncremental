@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 9486cd2a8610e914bbdad38da0792ada
-timeCreated: 1485252298
+timeCreated: 1487819634
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -393,9 +393,9 @@ TextureImporter:
       name: yellow_sliderLeft.png
       rect:
         serializedVersion: 2
-        x: 339
+        x: 340
         y: 82
-        width: 39
+        width: 38
         height: 31
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
