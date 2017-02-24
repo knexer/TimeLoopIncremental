@@ -33,14 +33,7 @@ public class PrestigeController : MonoBehaviour {
         {
             GameObject prestige = transform.GetChild(i).gameObject;
             names.Add(prestige.name);
-            if (prestige.GetComponent<PrestigeReplayer>() != null)
-            {
-                replays.Add(prestige.GetComponent<PrestigeReplayer>().actions);
-            }
-            else
-            {
-                replays.Add(prestige.GetComponent<PrestigeRecorder>().actions);
-            }
+            replays.Add(prestige.GetComponent<PrestigeActions>().Actions);
             Destroy(prestige);
         }
 
@@ -49,7 +42,8 @@ public class PrestigeController : MonoBehaviour {
             GameObject previousPrestige = Instantiate(PrestigePrefab, transform, false);
             previousPrestige.name = names[i];
             Destroy(previousPrestige.GetComponent<PrestigeRecorder>());
-            previousPrestige.AddComponent<PrestigeReplayer>().Init(replays[i]);
+            previousPrestige.GetComponent<PrestigeActions>().Actions = replays[i];
+            previousPrestige.AddComponent<PrestigeReplayer>();
         }
         
         CurrentPrestige = Instantiate(PrestigePrefab, transform, false);

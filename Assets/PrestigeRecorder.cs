@@ -2,19 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(PrestigeActions))]
 public class PrestigeRecorder : MonoBehaviour {
-    public List<IPrestigeAction> actions;
+    PrestigeActions Actions;
 
     public void ApplyAndRecordAction(IPrestigeAction action)
     {
         if (action.ApplyChangeToPrestige(gameObject))
         {
-            actions.Add(action);
+            Actions.Actions.Add(action);
         }
     }
 
 	// Use this for initialization
 	void Start () {
-        actions = new List<IPrestigeAction>();
+        Actions = GetComponent<PrestigeActions>();
 	}
 }

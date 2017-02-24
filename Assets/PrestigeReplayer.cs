@@ -3,34 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(PrestigeActions))]
 public class PrestigeReplayer : MonoBehaviour {
-    public List<IPrestigeAction> actions;
+    private PrestigeActions Actions;
 
     private int NextAction;
 
-    public void Init(List<IPrestigeAction> actionsToReplay)
-    {
-        if (actions != null)
-        {
-            throw new InvalidOperationException("PrestigeReplayer has already been initiailized.");
-        }
-
-        actions = actionsToReplay;
-    }
-
 	// Use this for initialization
 	void Start () {
+        Actions = GetComponent<PrestigeActions>();
         NextAction = 0;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        if (actions == null) return;
         ResourceStorage currentStorage = GetComponent<ResourceStorage>();
 
-        while (NextAction < actions.Count
-            && currentStorage.Resources.IsAtLeast(actions[NextAction].ResourcesThreshold)
-            && actions[NextAction].ApplyChangeToPrestige(gameObject)) {
+        while (NextAction < Actions.Actions.Count
+            && currentStorage.Resources.IsAtLeast(Actions.Actions[NextAction].ResourcesThreshold)
+            && Actions.Actions[NextAction].ApplyChangeToPrestige(gameObject)) {
             NextAction++;
         }
 	}
