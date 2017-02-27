@@ -7,5 +7,6 @@ using UnityEngine;
 public interface IPrestigeAction
 {
     Resources ResourcesThreshold { get; }
+    Sprite Sprite { get; }
     bool ApplyChangeToPrestige(GameObject prestige);
 }

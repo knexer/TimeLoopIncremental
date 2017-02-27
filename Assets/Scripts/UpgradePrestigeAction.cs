@@ -10,6 +10,10 @@ public class UpgradePrestigeAction : IPrestigeAction
     {
         get; private set;
     }
+    public Sprite Sprite
+    {
+        get; private set;
+    }
 
     private GridPosition Position;
 
@@ -17,6 +21,7 @@ public class UpgradePrestigeAction : IPrestigeAction
     {
         ResourcesThreshold = resourcesThreshold;
         Position = position;
+        // TODO Sprite for upgrade
     }
 
     public bool ApplyChangeToPrestige(GameObject prestige)

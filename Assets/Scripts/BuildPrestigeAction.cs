@@ -12,12 +12,17 @@ public class BuildPrestigeAction : IPrestigeAction
     {
         get; private set;
     }
+    public Sprite Sprite
+    {
+        get; private set;
+    }
 
     public BuildPrestigeAction(GameObject buildablePrefab, Resources playerStorage, GridPosition spawnPosition)
     {
         BuildablePrefab = buildablePrefab;
         SpawnPosition = spawnPosition;
         ResourcesThreshold = playerStorage;
+        Sprite = buildablePrefab.GetComponent<SpriteRenderer>().sprite;
     }
 
     public bool ApplyChangeToPrestige(GameObject prestige)

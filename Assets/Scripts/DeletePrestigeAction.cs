@@ -11,6 +11,10 @@ public class DeletePrestigeAction : IPrestigeAction
     {
         get; private set;
     }
+    public Sprite Sprite
+    {
+        get; private set;
+    }
 
     private GridPosition DeletePosition;
 
@@ -18,6 +22,7 @@ public class DeletePrestigeAction : IPrestigeAction
     {
         ResourcesThreshold = playerStorage;
         DeletePosition = deletePosition;
+        // TODO Sprite for delete
     }
 
     public bool ApplyChangeToPrestige(GameObject prestige)
