@@ -20,8 +20,8 @@ public class ResourceStorageDisplay : MonoBehaviour
         foreach (ResourceType type in Enum.GetValues(typeof(ResourceType)))
         {
             GameObject resourceDisplay = Instantiate(ResourceDisplayPrefab, gameObject.transform, false);
-            ResourceDisplays[type] = resourceDisplay.transform.FindChild("Text").GetComponent<Text>();
-            resourceDisplay.transform.FindChild("Image").GetComponent<Image>().sprite = ResourceSprites.GetSpriteForResourceType(type);
+            ResourceDisplays[type] = resourceDisplay.transform.Find("Text").GetComponent<Text>();
+            resourceDisplay.transform.Find("Image").GetComponent<Image>().sprite = ResourceSprites.GetSpriteForResourceType(type);
         }
     }
 	

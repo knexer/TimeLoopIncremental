@@ -18,9 +18,9 @@ public class PrestigeSelectorButtonsController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         Prestiges = FindObjectOfType<PrestigeController>();
-        NextPrestigeButton = transform.FindChild("NextPrestigeButton").GetComponent<Button>();
+        NextPrestigeButton = transform.Find("NextPrestigeButton").GetComponent<Button>();
         NextPrestigeButton.onClick.AddListener(GoNext);
-        PreviousPrestigeButton = transform.FindChild("PreviousPrestigeButton").GetComponent<Button>();
+        PreviousPrestigeButton = transform.Find("PreviousPrestigeButton").GetComponent<Button>();
         PreviousPrestigeButton.onClick.AddListener(GoPrevious);
     }
 	

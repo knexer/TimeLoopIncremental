@@ -11,8 +11,8 @@ public class BuildableButtonConfigurator : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        transform.FindChild("Icon").GetComponent<Image>().sprite = BuildablePrefab.GetComponent<SpriteRenderer>().sprite;
-        transform.FindChild("Hotkey").GetComponent<Text>().text = BuildablePrefab.GetComponent<HotkeyBuildable>().Hotkey;
+        transform.Find("Icon").GetComponent<Image>().sprite = BuildablePrefab.GetComponent<SpriteRenderer>().sprite;
+        transform.Find("Hotkey").GetComponent<Text>().text = BuildablePrefab.GetComponent<HotkeyBuildable>().Hotkey;
 	}
 	
 	// Update is called once per frame
