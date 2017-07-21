@@ -6,13 +6,13 @@ using UnityEngine.UI;
 
 public class ResourceStorageDisplay : MonoBehaviour
 {
-    public GameObject ResourceDisplayPrefab;
-    public ResourceSprites ResourceSprites;
+    [SerializeField] private GameObject ResourceDisplayPrefab;
+    [SerializeField] private ResourceSprites ResourceSprites;
 
     private ResourceStorage Storage;
     private Dictionary<ResourceType, Text> ResourceDisplays;
 
-    void Awake()
+    private void Awake()
     {
         Storage = GetComponentInParent<ResourceStorage>();
         ResourceDisplays = new Dictionary<ResourceType, Text>();
@@ -24,8 +24,8 @@ public class ResourceStorageDisplay : MonoBehaviour
             resourceDisplay.transform.Find("Image").GetComponent<Image>().sprite = ResourceSprites.GetSpriteForResourceType(type);
         }
     }
-	
-	void Update () {
+
+    private void Update () {
         foreach (ResourceType type in Enum.GetValues(typeof(ResourceType)))
         {
             ResourceDisplays[type].text = ": " + Storage.Resources.GetResourceAmount(type);

@@ -10,13 +10,13 @@ public class BuildableButtonConfigurator : MonoBehaviour {
     public PrestigeController CurrentPrestigeRef;
 
 	// Use this for initialization
-	void Start () {
+    private void Start () {
         transform.Find("Icon").GetComponent<Image>().sprite = BuildablePrefab.GetComponent<SpriteRenderer>().sprite;
         transform.Find("Hotkey").GetComponent<Text>().text = BuildablePrefab.GetComponent<HotkeyBuildable>().Hotkey;
 	}
 	
 	// Update is called once per frame
-	void Update () {
+    private void Update () {
         PlacementCostComponent costHolder = BuildablePrefab.GetComponent<PlacementCostComponent>();
         if (costHolder != null)
         {

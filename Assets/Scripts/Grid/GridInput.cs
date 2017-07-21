@@ -5,22 +5,21 @@ using UnityEngine;
 
 [RequireComponent(typeof(GridPositionComponent))]
 public class GridInput : MonoBehaviour {
-    public Resource ResourcePrefab;
+    [SerializeField] private Resource ResourcePrefab;
+    [SerializeField] private float ProvidedPerSecond;
+
     public ResourceType? ProvidedResource = null;
-    public float ProvidedPerSecond;
 
     private GridPositionComponent PositionHolder;
     private float lastProvidedTime = 0;
     private Upgradeable upgradeLevel;
-
-    // Use this for initialization
-    void Start () {
+    
+    private void Start () {
         PositionHolder = GetComponent<GridPositionComponent>();
         upgradeLevel = GetComponent<Upgradeable>();
 	}
 	
-	// Update is called once per frame
-	void Update () {
+    private void Update () {
         if (lastProvidedTime + 1 / (ProvidedPerSecond * upgradeLevel.UpgradeLevel) <= Time.time)
         {
             // Create resource(s) and insert them into the grid at the correct location.

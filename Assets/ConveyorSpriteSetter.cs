@@ -6,11 +6,11 @@ using UnityEngine;
 [RequireComponent(typeof(Conveyor))]
 public class ConveyorSpriteSetter : MonoBehaviour
 {
-    public Sprite VerticalSprite;
-    public Sprite HorizontalSprite;
+    [SerializeField] private Sprite VerticalSprite;
+    [SerializeField] private Sprite HorizontalSprite;
 
     // Use this for initialization
-    void Start()
+    private void Start()
     {
         switch (GetComponent<Conveyor>().Orientation)
         {
@@ -26,9 +26,4 @@ public class ConveyorSpriteSetter : MonoBehaviour
                 throw new ArgumentException(GetComponent<Conveyor>().Orientation + " is not a recognized Direction.");
         }
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

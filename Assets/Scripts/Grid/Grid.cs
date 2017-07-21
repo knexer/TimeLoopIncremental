@@ -7,27 +7,35 @@ using UnityEngine.UI;
 [RequireComponent(typeof(ConveyorSolver))]
 public class Grid : MonoBehaviour {
 
+    private const float CellWidth = 1;
+    private const float CellHeight = 1;
+
     //Unity configurables
-    public int Width = 1;
-    public int Height = 1;
-    public GameObject CellPrefab;
-    private float CellWidth = 1;
-    private float CellHeight = 1;
-    public int NumInputs = 1;
-    public GridInput InputPrefab;
-    public int NumOutputs = 1;
-    public GridOutput OutputPrefab;
+    [SerializeField] private int Width = 1;
+    [SerializeField] private int Height = 1;
+    [SerializeField] private GameObject CellPrefab;
+    [SerializeField] private int NumInputs = 1;
+    [SerializeField] private GridInput InputPrefab;
+    [SerializeField] private int NumOutputs = 1;
+    [SerializeField] private GridOutput OutputPrefab;
 
     private GameObject[,] GridCells;
     private GridPositionComponent[,] GridObjects;
 
 	// Use this for initialization
-	void Awake () {
+    private void Awake () {
         // scale the grid to correspond to the size indicated in the UI layout configuration
         LayoutElement size = GetComponent<LayoutElement>();
         transform.localScale = new Vector2(size.preferredWidth / Width, size.preferredHeight / Height);
 
         // Populate the grid
+        CreateCells();
+	    CreateInputs();
+        CreateOutputs();
+    }
+
+    private void CreateCells()
+    {
         GridCells = new GameObject[Width, Height];
         for (int w = 0; w < Width; w++)
         {
@@ -39,8 +47,10 @@ public class Grid : MonoBehaviour {
         }
 
         GridObjects = new GridPositionComponent[Width, Height];
-        
-        // Create the inputs
+    }
+
+    private void CreateInputs()
+    {
         for (int i = 0; i < NumInputs; i++)
         {
             float cellFractionToTheLeft = ((float) i + 1) / (NumInputs + 1);
@@ -51,18 +61,20 @@ public class Grid : MonoBehaviour {
             Array resourceTypes = Enum.GetValues(typeof(ResourceType));
             currentInput.ProvidedResource = (ResourceType) resourceTypes.GetValue(i % resourceTypes.Length);
         }
+    }
 
-        // Create the outputs
+    private void CreateOutputs()
+    {
         for (int i = 0; i < NumOutputs; i++)
         {
-            float cellFractionToTheLeft = ((float)i + 1) / (NumOutputs + 1);
+            float cellFractionToTheLeft = ((float) i + 1) / (NumOutputs + 1);
             int cellsToTheLeft = Mathf.FloorToInt(cellFractionToTheLeft * Width);
 
             GridOutput currentOutput = ForceSpawnMachineAt(OutputPrefab, new GridPosition(cellsToTheLeft, Height - 1));
         }
     }
 
-    void Start ()
+    private void Start ()
     {
         //Resize the cells
         foreach (GameObject cell in GridCells)

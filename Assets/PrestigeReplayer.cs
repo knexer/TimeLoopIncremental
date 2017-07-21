@@ -10,13 +10,13 @@ public class PrestigeReplayer : MonoBehaviour {
     private int NextAction;
 
 	// Use this for initialization
-	void Start () {
+    private void Start () {
         Actions = GetComponent<PrestigeActions>();
         NextAction = 0;
 	}
 	
 	// Update is called once per frame
-	void Update () {
+    private void Update () {
         ResourceStorage currentStorage = GetComponent<ResourceStorage>();
 
         while (NextAction < Actions.Actions.Count

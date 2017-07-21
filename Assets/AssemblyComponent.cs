@@ -7,12 +7,12 @@ using UnityEngine;
 [RequireComponent(typeof(ResourceSink))]
 [RequireComponent(typeof(GridMachine))]
 public class AssemblyComponent : MonoBehaviour {
-    public ResourceType input;
-    public ResourceType output;
+    [SerializeField] private ResourceType input;
+    [SerializeField] private ResourceType output;
 
-    public Resource ResourcePrefab;
+    [SerializeField] private Resource ResourcePrefab;
 
-    public float CraftedPerSecond;
+    [SerializeField] private float CraftedPerSecond;
 
     private float lastCraftedTime = 0;
     private int inputQuantity = 0;
@@ -20,7 +20,7 @@ public class AssemblyComponent : MonoBehaviour {
     private Upgradeable upgradeLevel;
 
     // Use this for initialization
-    void Start () {
+    private void Start () {
         GetComponent<ResourceSink>().CanAcceptItem = (itemType) => itemType.Equals(input) && inputQuantity == 0;
         
         GetComponent<ResourceSink>().DeliverItem = (item) =>
@@ -36,7 +36,7 @@ public class AssemblyComponent : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+    private void Update () {
         if (lastCraftedTime + 1 / (CraftedPerSecond * upgradeLevel.UpgradeLevel) <= Time.time)
         {
             if (inputQuantity > 0 && outputQuantity < 4)

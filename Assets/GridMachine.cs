@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GridMachine : MonoBehaviour {
-    public bool IsDestroyable = false;
+    [SerializeField] private bool IsDestroyable = false;
 
     public void TryDestroy()
     {
@@ -15,12 +15,7 @@ public class GridMachine : MonoBehaviour {
     }
 
 	// Use this for initialization
-	void Start () {
+    private void Start () {
         GetComponent<GridPositionComponent>().RegisterAsMachine();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
 	}
 }

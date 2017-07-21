@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(PrestigeActions))]
 public class PrestigeRecorder : MonoBehaviour {
-    PrestigeActions Actions;
+    private PrestigeActions Actions;
 
     public void ApplyAndRecordAction(IPrestigeAction action)
     {
@@ -15,7 +15,7 @@ public class PrestigeRecorder : MonoBehaviour {
     }
 
 	// Use this for initialization
-	void Start () {
+    private void Start () {
         Actions = GetComponent<PrestigeActions>();
 	}
 }

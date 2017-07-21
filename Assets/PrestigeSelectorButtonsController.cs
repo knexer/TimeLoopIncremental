@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PrestigeSelectorButtonsController : MonoBehaviour {
     // UNITY CONFIGURABLE
-    public float TransitTime = 0.5f;
+    [SerializeField] private float TransitTime = 0.5f;
     // END UNITY CONFIGURABLE
 
     private PrestigeController Prestiges;
@@ -16,7 +16,7 @@ public class PrestigeSelectorButtonsController : MonoBehaviour {
     private float ArrivalTime = 0;
 
 	// Use this for initialization
-	void Start () {
+    private void Start () {
         Prestiges = FindObjectOfType<PrestigeController>();
         NextPrestigeButton = transform.Find("NextPrestigeButton").GetComponent<Button>();
         NextPrestigeButton.onClick.AddListener(GoNext);
@@ -25,7 +25,7 @@ public class PrestigeSelectorButtonsController : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-	void Update () {
+    private void Update () {
         NextPrestigeButton.gameObject.SetActive(Prestiges.transform.childCount > 1);
         NextPrestigeButton.interactable = PrestigeIndex > 0;
         PreviousPrestigeButton.gameObject.SetActive(Prestiges.transform.childCount > 1);

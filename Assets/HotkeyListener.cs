@@ -13,7 +13,7 @@ public class HotkeyListener : MonoBehaviour {
     private BuildablePrefabs Buildables;
     private PrestigeRecorder ActionRecorder;
 
-    void OnMouseOver()
+    private void OnMouseOver()
     {
         foreach (GameObject buildable in Buildables.Buildables)
         {
@@ -40,14 +40,9 @@ public class HotkeyListener : MonoBehaviour {
     }
 
 	// Use this for initialization
-	void Start () {
+    private void Start () {
         PlayerResources = GetComponentInParent<ResourceStorage>();
         Buildables = GetComponentInParent<BuildablePrefabs>();
         ActionRecorder = GetComponentInParent<PrestigeRecorder>();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
 	}
 }

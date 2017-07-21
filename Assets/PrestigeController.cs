@@ -5,20 +5,19 @@ using UnityEngine;
 
 public class PrestigeController : MonoBehaviour {
     //// UNITY CONFIGURATION
-    [SerializeField]
-    private GameObject PrestigePrefab;
+    [SerializeField] private GameObject PrestigePrefab;
     //// END UNITY CONFIGURATION
 
     [HideInInspector]
     public GameObject CurrentPrestige;
 
 	// Use this for initialization
-	void Awake () {
+    private void Awake () {
         DoPrestige();
 	}
 	
 	// Update is called once per frame
-	void Update () {
+    private void Update () {
 		if (Input.GetKeyDown(KeyCode.Space))
         {
             DoPrestige();

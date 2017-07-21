@@ -7,9 +7,8 @@ using UnityEngine;
 public class GridOutput : MonoBehaviour {
     private ResourceStorage ItemDestination;
     private ResourceSink ItemSource;
-
-	// Use this for initialization
-	void Start () {
+    
+    private void Start () {
         ItemDestination = GetComponentInParent<ResourceStorage>();
         ItemSource = GetComponent<ResourceSink>();
 
@@ -20,10 +19,5 @@ public class GridOutput : MonoBehaviour {
             Destroy(item.gameObject);
             return true;
         };
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
 	}
 }

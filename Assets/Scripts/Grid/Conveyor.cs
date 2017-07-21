@@ -15,7 +15,7 @@ public class Conveyor : MonoBehaviour {
             return PositionHolder.Position.InDirection(Orientation);
         }
     }
-    public float ConveyingTimeSeconds = 0.5f;
+    [SerializeField] private float ConveyingTimeSeconds = 0.5f;
 
     private ConveyorSolver Solver;
     private GridPositionComponent PositionHolder;
@@ -31,7 +31,7 @@ public class Conveyor : MonoBehaviour {
     public Resource CurrentlyConveyedItem;
 
     // Use this for initialization
-    void Awake()
+    private void Awake()
     {
         Solver = GetComponentInParent<ConveyorSolver>();
 
@@ -54,13 +54,13 @@ public class Conveyor : MonoBehaviour {
         Orientation = InitialOrientation;
 	}
 
-    void Start()
+    private void Start()
     {
         // This guy will handle deciding if we're blocked or not, and giving us input, at Update time
         Solver.RegisterConveyor(this);
     }
 
-    void OnDestroy()
+    private void OnDestroy()
     {
         Solver.DeregisterConveyor(this);
 
@@ -70,7 +70,7 @@ public class Conveyor : MonoBehaviour {
         }
     }
 
-    void LateUpdate ()
+    private void LateUpdate ()
     {
         if (CurrentlyConveyedItem != null)
         {

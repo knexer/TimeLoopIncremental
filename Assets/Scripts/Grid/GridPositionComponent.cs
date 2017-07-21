@@ -16,14 +16,14 @@ public class GridPositionComponent : MonoBehaviour {
     }
 
 	// Use this for initialization
-	void Awake () {
+    private void Awake () {
         // Establish relationship with the containing Grid.
         // This object should be fully initialized (parent transform and initial position) before it's enabled for the first time.
         Grid = gameObject.transform.GetComponentInParent<Grid>();
         Position = InitialPosition;
     }
 
-    void Start ()
+    private void Start ()
     {
         transform.position = Grid.gridToWorldSpace(Position);
     }

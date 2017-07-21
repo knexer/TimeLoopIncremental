@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ResourceSpriteSetter : MonoBehaviour {
-    public ResourceSprites ResourceSprites;
+    [SerializeField] private ResourceSprites ResourceSprites;
 
 	// Use this for initialization
-	void Start () {
+    private void Start () {
         GetComponent<SpriteRenderer>().sprite = ResourceSprites.GetSpriteForResourceType(GetComponent<Resource>().ResourceType);
 	}
 }

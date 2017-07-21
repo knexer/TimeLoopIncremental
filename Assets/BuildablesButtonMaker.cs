@@ -4,12 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BuildablesButtonMaker : MonoBehaviour {
-    public GameObject BuildablesButtonPrefab;
+    [SerializeField] private GameObject BuildablesButtonPrefab;
 
 	// Use this for initialization
-	void Start () {
+    private void Start () {
         PrestigeController prestigeController = FindObjectOfType<PrestigeController>();
-        ResourceStorage resourceStorages = prestigeController.CurrentPrestige.GetComponent<ResourceStorage>();
 
 		foreach (GameObject buildablePrefab in prestigeController.CurrentPrestige.GetComponent<BuildablePrefabs>().Buildables)
         {

@@ -6,18 +6,12 @@ using UnityEngine;
 public class ConveyorSolver : MonoBehaviour {
     private HashSet<Conveyor> Conveyors;
 
-    void Awake()
+    private void Awake()
     {
         Conveyors = new HashSet<Conveyor>();
     }
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-
-    // Update is called once per frame
-    void Update() {
+    
+    private void Update() {
         // Find the set of conveyors that wish to drop off their item
         List<Conveyor> blockedConveyors = Conveyors.Where((c) => c.ReadyToOffer).ToList<Conveyor>();
 
